@@ -10,23 +10,23 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8497b92634dabd64b81d263e7bf7eb79, type: 3}
-  m_Name: Kick
+  m_Name: Nothing
   m_EditorClassIdentifier: Assembly-CSharp::Card
-  uniqueID: 0ac27628b1aab994e90f19f7d7c10c13
-  _Name: Kick
-  _ManaCost: 1
-  _CardType: 0
+  uniqueID: f1ad0cacdc419db4fb047a1f749e07e9
+  _Name: 
+  _ManaCost: 0
+  _CardType: 1
   _Attack:
-    _Damage: 5
+    _Damage: 0
     _Status:
       _Status: 0
       _Turns: 0
-    _StartFrames: 2
+    _StartFrames: 0
     _OnHit:
       _SelfDelayFrames: 0
-      _TargetDelayFrames: 2
+      _TargetDelayFrames: 0
     _OnMiss:
-      _SelfDelayFrames: 2
+      _SelfDelayFrames: 0
       _TargetDelayFrames: 0
   _FlavorText: 
   _TypeSprite: {fileID: 0}

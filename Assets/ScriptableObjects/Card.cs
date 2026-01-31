@@ -25,6 +25,8 @@ public class Card : ScriptableObject
     public string _FlavorText;
     public Sprite _TypeSprite;
     
+    public MovementResult _MovementResult;
+    
     #if UNITY_EDITOR
     private void OnValidate()
     {
@@ -43,6 +45,9 @@ public struct AttackData
 {
     public int _Damage;
     public StatusData _Status;
+    public float _StartFrames;
+    public BattleResult _OnHit;
+    public BattleResult _OnMiss;
 }
 
 [System.Serializable]
@@ -55,4 +60,22 @@ public struct StatusData
 public enum StatusInflict
 {
     None, Stun
+}
+[System.Serializable]
+public struct BattleResult
+{
+    public int _SelfDelayFrames;
+    public int _TargetDelayFrames;
+}
+
+[System.Serializable]
+public struct MovementResult
+{
+    public int _BlocksToMove;
+    public MoveType _MoveType;
+}
+
+public enum MoveType
+{
+    None, Up, Forward, Back
 }
