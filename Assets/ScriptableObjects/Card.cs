@@ -25,8 +25,6 @@ public class Card : ScriptableObject
     public string _FlavorText;
     public Sprite _TypeSprite;
     
-    internal bool IsSelected = false;
-    
     #if UNITY_EDITOR
     private void OnValidate()
     {

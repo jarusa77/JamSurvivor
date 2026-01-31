@@ -9,7 +9,7 @@ public class Fighter : MonoBehaviour
 {
     //likely to have a player ID to know which card selection corresponds to whom(?)
     [SerializeField] int ID;
-    public List<Card> Hand;
+    [SerializeField] List<PlayerCardInHand> Hand;
     public int MaxHP = 100;
     private int CurrentHP;
     private static int PlayerMaxCards = 5;
@@ -43,6 +43,7 @@ public class Fighter : MonoBehaviour
         option4 = inputActions.FindAction("Option4");
         option5 = inputActions.FindAction("Option5");
         turnEnd = inputActions.FindAction("TurnEnd");
+        Hand = new List<PlayerCardInHand>();
     }
 
     private void OnEnable()
@@ -57,10 +58,9 @@ public class Fighter : MonoBehaviour
 
     internal void DiscardHand()
     {
-        foreach (Card card in Hand)
+        foreach (PlayerCardInHand card in Hand)
         {
-            card.IsSelected = false;
-            DeckSystem.Instance.DiscardCard(card);
+            DeckSystem.Instance.DiscardCard(card._card);
         }
         Hand.Clear();
     }
@@ -104,18 +104,19 @@ public class Fighter : MonoBehaviour
             if(deepCopy != null)
                 Hand.Add(deepCopy);
             */
-            Hand.Add(DeckSystem.Instance.Draw());
+            Hand.Add(new PlayerCardInHand(DeckSystem.Instance.Draw(), false));
         }
-
         CurrentState = PlayerState.Idle;
+        CurrentMana = MaxMana;
     }
 
     private void SelectCardForQueue(int index)
     {
         Debug.Log("Player "+ID+" picked "+index);
-        if(!Hand[index].IsSelected)
+        Debug.Log(CurrentMana + " -> " + Hand[index]._card._ManaCost);
+        if(!Hand[index]._isSelected)
         {
-            if (Hand[index]._ManaCost > CurrentMana)
+            if (Hand[index]._card._ManaCost > CurrentMana)
             {
                 Debug.Log("Not enough Mana!");
                 return;
@@ -123,16 +124,16 @@ public class Fighter : MonoBehaviour
             else
             {
                 //TODO: Might not need to save actions to a different queue, but can instead loop through the hand and pick the selected.
-                Hand[index].IsSelected = true;
-                CurrentMana -= Hand[index]._ManaCost;
+                Hand[index]._isSelected = true;
+                CurrentMana -= Hand[index]._card._ManaCost;
                //AddCardToQueue(Hand[index]);
             }
         }
         else
         {
             //player "de-selected" the card from the queue - hence returning the mana cost.
-            Hand[index].IsSelected = false;
-            CurrentMana += Hand[index]._ManaCost;
+            Hand[index]._isSelected = false;
+            CurrentMana += Hand[index]._card._ManaCost;
         }
     }
 
@@ -155,4 +156,16 @@ public class Fighter : MonoBehaviour
         OnPlayerTurnSet?.Invoke();
     }
 
+}
+
+[Serializable] public class PlayerCardInHand
+{
+    [SerializeField] internal Card _card;
+    [SerializeField] internal bool _isSelected;
+
+    public PlayerCardInHand(Card card, bool isSelected)
+    {
+        _card = card;
+        _isSelected = isSelected;
+    }
 }
