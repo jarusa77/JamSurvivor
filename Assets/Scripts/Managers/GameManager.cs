@@ -50,7 +50,6 @@ public class GameManager : MonoBehaviour
 
     public void PlayerConfirmTurnEnd()
     {
-        Debug.Log("A Player Ended their turn");
         //Check for all fighters states if they both ended their turn.
         //Alternatively, just keep a local game manager varialbe, but then if a player wants to change their opinion after lock in, would need to recall event.
         if (_fighters.Any(x => x.CurrentState != PlayerState.TurnEnd))
@@ -62,6 +61,7 @@ public class GameManager : MonoBehaviour
     private void SendDataToTurnExecuteSystem()
     {
         TurnSystem.Instance.ExecuteBattle(_fighters[0], _fighters[1]);
+        BattleEnded();
     }
 
     public void BattleEnded()

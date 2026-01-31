@@ -6,8 +6,8 @@ using System.Linq;
 public class DeckSystem : MonoBehaviour
 {
     private  System.Random rng = new System.Random();
-    public  List<Card> Discard;
-    public  List<Card> Deck;
+    public  List<FighterActions> Discard;
+    public  List<FighterActions> Deck;
 
     public static DeckSystem Instance;
 
@@ -20,7 +20,7 @@ public class DeckSystem : MonoBehaviour
         }
 
         Instance = this;
-        Discard = new List<Card>();
+        Discard = new List<FighterActions>();
     }
 
     public static void Shuffle<T>(List<T> list)
@@ -34,7 +34,7 @@ public class DeckSystem : MonoBehaviour
         }
     }
 
-    public Card Draw()
+    public FighterActions Draw()
     {
         if (Deck.Count == 0)
         {
@@ -42,7 +42,7 @@ public class DeckSystem : MonoBehaviour
             {
                 Shuffle(Discard);
                 Deck.Clear();
-                foreach (Card c in Discard)
+                foreach (FighterActions c in Discard)
                 {
                     Deck.Add(c);
                 }
@@ -54,12 +54,12 @@ public class DeckSystem : MonoBehaviour
                 return null;
             }
         }
-        Card drewCard = Deck.FirstOrDefault();
+        FighterActions drewCard = Deck.FirstOrDefault();
         Deck.RemoveAt(0);
         return drewCard;
     }
 
-    public void DiscardCard(Card usedCard)
+    public void DiscardCard(FighterActions usedCard)
     {
         Discard.Add(usedCard);
     }

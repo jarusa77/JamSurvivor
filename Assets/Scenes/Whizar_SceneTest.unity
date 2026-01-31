@@ -420,16 +420,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DeckSystem
   Discard: []
   Deck:
-  - {fileID: 11400000, guid: eb559d98404f0a64c9699dcc267df3b1, type: 2}
-  - {fileID: 11400000, guid: eb559d98404f0a64c9699dcc267df3b1, type: 2}
-  - {fileID: 11400000, guid: eb559d98404f0a64c9699dcc267df3b1, type: 2}
-  - {fileID: 11400000, guid: eb559d98404f0a64c9699dcc267df3b1, type: 2}
-  - {fileID: 11400000, guid: eb559d98404f0a64c9699dcc267df3b1, type: 2}
-  - {fileID: 11400000, guid: eb559d98404f0a64c9699dcc267df3b1, type: 2}
-  - {fileID: 11400000, guid: eb559d98404f0a64c9699dcc267df3b1, type: 2}
-  - {fileID: 11400000, guid: 561fce23b3a98d246affc064735e5b36, type: 2}
-  - {fileID: 11400000, guid: 561fce23b3a98d246affc064735e5b36, type: 2}
-  - {fileID: 11400000, guid: 561fce23b3a98d246affc064735e5b36, type: 2}
+  - {fileID: 11400000, guid: 917ea847ff4c67b4195f4bb0497bc4a0, type: 2}
+  - {fileID: 11400000, guid: 917ea847ff4c67b4195f4bb0497bc4a0, type: 2}
+  - {fileID: 11400000, guid: 917ea847ff4c67b4195f4bb0497bc4a0, type: 2}
+  - {fileID: 11400000, guid: 917ea847ff4c67b4195f4bb0497bc4a0, type: 2}
+  - {fileID: 11400000, guid: e960c3ab8052eae438a225165c29d958, type: 2}
+  - {fileID: 11400000, guid: e960c3ab8052eae438a225165c29d958, type: 2}
+  - {fileID: 11400000, guid: e960c3ab8052eae438a225165c29d958, type: 2}
+  - {fileID: 11400000, guid: 68cd5969da37f6b4a9f99e353661b94b, type: 2}
+  - {fileID: 11400000, guid: 68cd5969da37f6b4a9f99e353661b94b, type: 2}
+  - {fileID: 11400000, guid: 68cd5969da37f6b4a9f99e353661b94b, type: 2}
+  - {fileID: 11400000, guid: 68cd5969da37f6b4a9f99e353661b94b, type: 2}
+  - {fileID: 11400000, guid: 68cd5969da37f6b4a9f99e353661b94b, type: 2}
+  - {fileID: 11400000, guid: 68cd5969da37f6b4a9f99e353661b94b, type: 2}
+  - {fileID: 11400000, guid: 31925a11efe976a489c9e3bc334037fe, type: 2}
+  - {fileID: 11400000, guid: 31925a11efe976a489c9e3bc334037fe, type: 2}
+  - {fileID: 11400000, guid: 31925a11efe976a489c9e3bc334037fe, type: 2}
+  - {fileID: 11400000, guid: e960c3ab8052eae438a225165c29d958, type: 2}
+  - {fileID: 11400000, guid: e960c3ab8052eae438a225165c29d958, type: 2}
+  - {fileID: 11400000, guid: 917ea847ff4c67b4195f4bb0497bc4a0, type: 2}
+  - {fileID: 11400000, guid: 917ea847ff4c67b4195f4bb0497bc4a0, type: 2}
 --- !u!114 &2023527513
 MonoBehaviour:
   m_ObjectHideFlags: 0

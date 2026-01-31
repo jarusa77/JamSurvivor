@@ -16,7 +16,7 @@ public class Fighter : MonoBehaviour
     public static int MaxMana = 3;
     public int CurrentMana;
 
-    internal List<Card> QueuedCards;
+    internal List<FighterActions> QueuedCards;
 
     public InputActionAsset inputActions;
     
@@ -49,7 +49,7 @@ public class Fighter : MonoBehaviour
         option5 = inputActions.FindAction("Option5");
         turnEnd = inputActions.FindAction("TurnEnd");
         Hand = new List<PlayerCardInHand>();
-        QueuedCards = new List<Card>();
+        QueuedCards = new List<FighterActions>();
     }
 
     private void OnEnable()
@@ -120,8 +120,6 @@ public class Fighter : MonoBehaviour
 
     private void SelectCardForQueue(int index)
     {
-        Debug.Log("Player "+ID+" picked "+index);
-        Debug.Log(CurrentMana + " -> " + Hand[index]._card._ManaCost);
         if(!Hand[index]._isSelected)
         {
             if (Hand[index]._card._ManaCost > CurrentMana)
@@ -167,13 +165,11 @@ public class Fighter : MonoBehaviour
         OnPlayerTurnSet?.Invoke();
     }
 
-    public void ProcessBattleOutcome(AttackOutcome pOutcome)
+    public void ProcessBattleOutcome(ActionData pOutcome)
     {
-        //if fighter got hit by something
-        if (pOutcome._SuccessfullAttack)
-        {
-            CurrentHP -= pOutcome._Damage;
-        }
+        Debug.Log("Player: "+ID+" will take "+pOutcome.Damage+" damage");
+        CurrentHP -= pOutcome.Damage;
+        CheckForDeath();
     }
 
     private void CheckForDeath()
@@ -184,16 +180,14 @@ public class Fighter : MonoBehaviour
             OnPlayerKO?.Invoke();
         }
     }
-
-
 }
 
 [Serializable] public class PlayerCardInHand
 {
-    [SerializeField] internal Card _card;
+    [SerializeField] internal FighterActions _card;
     [SerializeField] internal bool _isSelected;
 
-    public PlayerCardInHand(Card card, bool isSelected)
+    public PlayerCardInHand(FighterActions card, bool isSelected)
     {
         _card = card;
         _isSelected = isSelected;
