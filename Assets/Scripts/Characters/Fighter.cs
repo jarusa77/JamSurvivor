@@ -16,6 +16,8 @@ public class Fighter : MonoBehaviour
     public static int MaxMana = 3;
     public int CurrentMana;
 
+    internal List<Card> QueuedCards;
+
     public InputActionAsset inputActions;
     
     private InputAction option1;
@@ -35,6 +37,9 @@ public class Fighter : MonoBehaviour
     public delegate void PlayerTurnSet();
     public static event PlayerTurnSet OnPlayerTurnSet;
 
+    public delegate void PlayerKO();
+    public static event PlayerKO OnPlayerKO;
+
     private void Awake()
     {
         option1 = inputActions.FindAction("Option1");
@@ -44,6 +49,7 @@ public class Fighter : MonoBehaviour
         option5 = inputActions.FindAction("Option5");
         turnEnd = inputActions.FindAction("TurnEnd");
         Hand = new List<PlayerCardInHand>();
+        QueuedCards = new List<Card>();
     }
 
     private void OnEnable()
@@ -106,8 +112,10 @@ public class Fighter : MonoBehaviour
             */
             Hand.Add(new PlayerCardInHand(DeckSystem.Instance.Draw(), false));
         }
+
         CurrentState = PlayerState.Idle;
         CurrentMana = MaxMana;
+        QueuedCards.Clear();
     }
 
     private void SelectCardForQueue(int index)
@@ -126,6 +134,7 @@ public class Fighter : MonoBehaviour
                 //TODO: Might not need to save actions to a different queue, but can instead loop through the hand and pick the selected.
                 Hand[index]._isSelected = true;
                 CurrentMana -= Hand[index]._card._ManaCost;
+                QueuedCards.Add(Hand[index]._card);
                //AddCardToQueue(Hand[index]);
             }
         }
@@ -134,6 +143,8 @@ public class Fighter : MonoBehaviour
             //player "de-selected" the card from the queue - hence returning the mana cost.
             Hand[index]._isSelected = false;
             CurrentMana += Hand[index]._card._ManaCost;
+            //TODO : will need to validate deep copy and ID comparison so that if a player selects multiple of the same card, it will only remove that from the queue
+            QueuedCards.Remove(Hand[index]._card);
         }
     }
 
@@ -155,6 +166,25 @@ public class Fighter : MonoBehaviour
         CurrentState = PlayerState.TurnEnd;
         OnPlayerTurnSet?.Invoke();
     }
+
+    public void ProcessBattleOutcome(AttackOutcome pOutcome)
+    {
+        //if fighter got hit by something
+        if (pOutcome._SuccessfullAttack)
+        {
+            CurrentHP -= pOutcome._Damage;
+        }
+    }
+
+    private void CheckForDeath()
+    {
+        if (CurrentHP <= 0)
+        {
+            CurrentState = PlayerState.KO;
+            OnPlayerKO?.Invoke();
+        }
+    }
+
 
 }
 

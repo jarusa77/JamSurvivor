@@ -398,6 +398,7 @@ GameObject:
   - component: {fileID: 2023527514}
   - component: {fileID: 2023527513}
   - component: {fileID: 2023527512}
+  - component: {fileID: 2023527515}
   m_Layer: 0
   m_Name: MANAGERS
   m_TagString: Untagged
@@ -419,35 +420,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DeckSystem
   Discard: []
   Deck:
-  - {fileID: 11400000, guid: b072978e5169ed44fb68a63bd356c75a, type: 2}
-  - {fileID: 11400000, guid: b072978e5169ed44fb68a63bd356c75a, type: 2}
   - {fileID: 11400000, guid: eb559d98404f0a64c9699dcc267df3b1, type: 2}
   - {fileID: 11400000, guid: eb559d98404f0a64c9699dcc267df3b1, type: 2}
   - {fileID: 11400000, guid: eb559d98404f0a64c9699dcc267df3b1, type: 2}
   - {fileID: 11400000, guid: eb559d98404f0a64c9699dcc267df3b1, type: 2}
   - {fileID: 11400000, guid: eb559d98404f0a64c9699dcc267df3b1, type: 2}
-  - {fileID: 11400000, guid: d74c0184bf7dfc549976e02f2fee837b, type: 2}
-  - {fileID: 11400000, guid: d74c0184bf7dfc549976e02f2fee837b, type: 2}
-  - {fileID: 11400000, guid: 2933ca179f1c73d4386350f3cdceb1d7, type: 2}
-  - {fileID: 11400000, guid: 2933ca179f1c73d4386350f3cdceb1d7, type: 2}
-  - {fileID: 11400000, guid: 561fce23b3a98d246affc064735e5b36, type: 2}
-  - {fileID: 11400000, guid: 561fce23b3a98d246affc064735e5b36, type: 2}
-  - {fileID: 11400000, guid: 561fce23b3a98d246affc064735e5b36, type: 2}
-  - {fileID: 11400000, guid: 561fce23b3a98d246affc064735e5b36, type: 2}
-  - {fileID: 11400000, guid: 561fce23b3a98d246affc064735e5b36, type: 2}
-  - {fileID: 11400000, guid: 561fce23b3a98d246affc064735e5b36, type: 2}
-  - {fileID: 11400000, guid: 561fce23b3a98d246affc064735e5b36, type: 2}
-  - {fileID: 11400000, guid: 561fce23b3a98d246affc064735e5b36, type: 2}
-  - {fileID: 11400000, guid: 561fce23b3a98d246affc064735e5b36, type: 2}
-  - {fileID: 11400000, guid: 561fce23b3a98d246affc064735e5b36, type: 2}
-  - {fileID: 11400000, guid: 561fce23b3a98d246affc064735e5b36, type: 2}
-  - {fileID: 11400000, guid: 561fce23b3a98d246affc064735e5b36, type: 2}
-  - {fileID: 11400000, guid: 561fce23b3a98d246affc064735e5b36, type: 2}
-  - {fileID: 11400000, guid: 561fce23b3a98d246affc064735e5b36, type: 2}
-  - {fileID: 11400000, guid: 561fce23b3a98d246affc064735e5b36, type: 2}
-  - {fileID: 11400000, guid: 561fce23b3a98d246affc064735e5b36, type: 2}
-  - {fileID: 11400000, guid: 561fce23b3a98d246affc064735e5b36, type: 2}
-  - {fileID: 11400000, guid: 561fce23b3a98d246affc064735e5b36, type: 2}
+  - {fileID: 11400000, guid: eb559d98404f0a64c9699dcc267df3b1, type: 2}
+  - {fileID: 11400000, guid: eb559d98404f0a64c9699dcc267df3b1, type: 2}
   - {fileID: 11400000, guid: 561fce23b3a98d246affc064735e5b36, type: 2}
   - {fileID: 11400000, guid: 561fce23b3a98d246affc064735e5b36, type: 2}
   - {fileID: 11400000, guid: 561fce23b3a98d246affc064735e5b36, type: 2}
@@ -478,6 +457,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2023527515
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2023527511}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e7bff5f18b60af40b72efe7b626e01d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TurnSystem
 --- !u!1 &2126587729
 GameObject:
   m_ObjectHideFlags: 0

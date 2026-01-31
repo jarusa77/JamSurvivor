@@ -8,6 +8,7 @@ internal enum Game_State
     Loading,
     PlayerTurn,
     TurnExecute,
+    KOEvaluation,
     GameOver,
     Pause
 }
@@ -33,11 +34,18 @@ public class GameManager : MonoBehaviour
         _fighters = new List<Fighter>();
         GameState = Game_State.Loading;
         Fighter.OnPlayerTurnSet += PlayerConfirmTurnEnd;
+        Fighter.OnPlayerKO += PlayerGotKO;
+    }
+
+    private void PlayerGotKO()
+    {
+        GameState =  Game_State.KOEvaluation;
     }
 
     private void OnDestroy()
     {
         Fighter.OnPlayerTurnSet -= PlayerConfirmTurnEnd;
+        Fighter.OnPlayerKO -= PlayerGotKO;
     }
 
     public void PlayerConfirmTurnEnd()
@@ -53,7 +61,11 @@ public class GameManager : MonoBehaviour
 
     private void SendDataToTurnExecuteSystem()
     {
-        Debug.Log("Ready to Execute Battle");
+        TurnSystem.Instance.ExecuteBattle(_fighters[0], _fighters[1]);
+    }
+
+    public void BattleEnded()
+    {
         SetupNextPlayerTurn();
     }
 
