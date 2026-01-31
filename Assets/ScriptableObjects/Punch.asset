@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8497b92634dabd64b81d263e7bf7eb79, type: 3}
+  m_Name: Punch
+  m_EditorClassIdentifier: Assembly-CSharp::Card
+  uniqueID: fd03fb27a2a7fac46b8697c77ffd3e89
+  _Name: Punch
+  _ManaCost: 1
+  _CardType: 0
+  _Attack:
+    _Damage: 5
+    _Status:
+      _Status: 0
+      _Turns: 0
+  _FlavorText: 
+  _TypeSprite: {fileID: 0}
