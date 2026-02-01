@@ -2,9 +2,18 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections;
 using Unity.Android.Gradle;
+using NUnit.Framework;
+using System.Collections.Generic;
+
+
+
 
 public class PlayerAvatarControl : MonoBehaviour
 {
+    delegate void AnimationAction();
+
+    List<AnimationAction> animationQueue = new List<AnimationAction>();
+
     Animator animator;
 
     [SerializeField] float moveDistance = 1.0f;
@@ -25,39 +34,57 @@ public class PlayerAvatarControl : MonoBehaviour
 
     public void test()
     {
-        if (isMoving) return;
-
         if (Keyboard.current.spaceKey.wasPressedThisFrame)
         {
-            StartCoroutine(Engage());
-        }
-
-        if (Keyboard.current.backspaceKey.wasPressedThisFrame)
-        {
-            StartCoroutine(Disengage());
-        }
-
-        if (Keyboard.current.kKey.wasPressedThisFrame)
-        {
-            Kick();
-        }
-
-        if (Keyboard.current.pKey.wasPressedThisFrame)
-        {
-            Punch();
-        }
-
-        if (Keyboard.current.bKey.wasPressedThisFrame)
-        {
-            Block();
-        }
-
-        if (Keyboard.current.dKey.wasPressedThisFrame)
-        {
-            Dodge();
+            RunSequence();
         }
 
     }
+
+    public void SetSequence()
+    {
+        
+        QueueEngage();
+        animationQueue.Add(Kick);
+        animationQueue.Add(Punch);
+
+        animationQueue.Add(Block);
+        animationQueue.Add(Dodge);
+
+        QueueDisengage();
+    }
+
+    public void RunSequence()
+    {
+        SetSequence();
+       StartCoroutine (Sequence());
+
+        
+
+    }
+
+    IEnumerator Sequence()
+    {
+        for (int i = 0; i < animationQueue.Count; i++)
+        {
+            animationQueue[i]?.Invoke();
+            yield return new WaitForSeconds(1f);
+        }
+        animationQueue.Clear();
+    }
+
+
+        void QueueEngage()
+    {
+        animationQueue.Add(() => StartCoroutine(Engage()));
+    }
+
+    void QueueDisengage()
+    {
+        animationQueue.Add(() => StartCoroutine(Disengage()));
+    }
+
+
 
     public void Kick()
     {
