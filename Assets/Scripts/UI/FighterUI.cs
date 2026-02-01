@@ -23,6 +23,8 @@ public class FighterUI : MonoBehaviour
     public void InitializeValues(int maxHealth, int currentHealth, int maxStamina, int currentStamina)
     {
         _HealthBarUI.InitailizeValues(maxHealth, currentHealth);
+        HealthText.text = currentHealth.ToString();
+        
     }
 
     public void UpdateHealth(int health)
