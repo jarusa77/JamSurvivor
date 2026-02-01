@@ -12,9 +12,11 @@ public class Fighter : MonoBehaviour
     [SerializeField] List<PlayerCardInHand> Hand;
     public int MaxHP = 100;
     private int CurrentHP;
-    private static int PlayerMaxCards = 5;
-    public static int MaxMana = 3;
+    [SerializeField] private  int PlayerMaxCards = 5;
+    [SerializeField] private int MaxMana = 3;
     public int CurrentMana;
+
+    public List<FighterActions> QueuedCards;
 
     public InputActionAsset inputActions;
     
@@ -24,7 +26,10 @@ public class Fighter : MonoBehaviour
     private InputAction option4;
     private InputAction option5;
     private InputAction turnEnd;
-    
+
+    [SerializeField] HandUI HandContainerUI;
+    [SerializeField] private BattleCardUI BattleContainerUI;
+    [SerializeField] private FighterUI _FighterUI;
     
     
 
@@ -35,6 +40,19 @@ public class Fighter : MonoBehaviour
     public delegate void PlayerTurnSet();
     public static event PlayerTurnSet OnPlayerTurnSet;
 
+    public delegate void PlayerKO();
+    public static event PlayerKO OnPlayerKO;
+
+    internal int GetHP()
+    {
+        return CurrentHP;
+    }
+
+    internal int GetID()
+    {
+        return ID;
+    }
+
     private void Awake()
     {
         option1 = inputActions.FindAction("Option1");
@@ -44,16 +62,30 @@ public class Fighter : MonoBehaviour
         option5 = inputActions.FindAction("Option5");
         turnEnd = inputActions.FindAction("TurnEnd");
         Hand = new List<PlayerCardInHand>();
+        QueuedCards = new List<FighterActions>();
+
+        Timer.OnTimerEnd += AutoSetQueue;
+        GameManager.OnToggleFighterInput += ToggleFighterInput;
     }
 
-    private void OnEnable()
+    void ToggleFighterInput(bool isActive)
     {
-        inputActions.FindActionMap("MoveSelect").Enable();
+        if(isActive)
+            inputActions.FindActionMap("MoveSelect").Enable();
+        else
+        {
+            inputActions.FindActionMap("MoveSelect").Disable();
+        }
     }
 
-    private void OnDisable()
+    private void OnDestroy()
     {
-        inputActions.FindActionMap("MoveSelect").Disable();
+        Timer.OnTimerEnd -= AutoSetQueue;
+    }
+
+    private void AutoSetQueue()
+    {
+        EndTurn();
     }
 
     internal void DiscardHand()
@@ -68,14 +100,15 @@ public class Fighter : MonoBehaviour
     void Start()
     {
         VariableInitialize();
+        HandContainerUI.CreatePlaceholders(PlayerMaxCards);
         GameManager.Instance.AddFighter(this);
-        
     }
 
     void VariableInitialize()
     {
         CurrentHP = MaxHP;
         CurrentMana = MaxMana;
+        _FighterUI.InitializeValues(MaxHP, CurrentHP, MaxMana, CurrentMana);
     }
 
     void Update()
@@ -106,14 +139,19 @@ public class Fighter : MonoBehaviour
             */
             Hand.Add(new PlayerCardInHand(DeckSystem.Instance.Draw(), false));
         }
+
         CurrentState = PlayerState.Idle;
         CurrentMana = MaxMana;
+        _FighterUI.UpdateStamina(CurrentMana);
+        QueuedCards.Clear();
+        
+        HandContainerUI.PopulateHandUI(Hand);
     }
 
     private void SelectCardForQueue(int index)
     {
-        Debug.Log("Player "+ID+" picked "+index);
-        Debug.Log(CurrentMana + " -> " + Hand[index]._card._ManaCost);
+        if(index >= Hand.Count)
+            return;
         if(!Hand[index]._isSelected)
         {
             if (Hand[index]._card._ManaCost > CurrentMana)
@@ -126,14 +164,21 @@ public class Fighter : MonoBehaviour
                 //TODO: Might not need to save actions to a different queue, but can instead loop through the hand and pick the selected.
                 Hand[index]._isSelected = true;
                 CurrentMana -= Hand[index]._card._ManaCost;
+                QueuedCards.Add(Hand[index]._card);
+                _FighterUI.UpdateStamina(CurrentMana);
                //AddCardToQueue(Hand[index]);
             }
         }
         else
         {
+            Debug.Log("Player attempted to de-select a card, currently not allowed");
+            /*
             //player "de-selected" the card from the queue - hence returning the mana cost.
             Hand[index]._isSelected = false;
             CurrentMana += Hand[index]._card._ManaCost;
+            //TODO : will need to validate deep copy and ID comparison so that if a player selects multiple of the same card, it will only remove that from the queue
+            QueuedCards.Remove(Hand[index]._card);
+            */
         }
     }
 
@@ -153,17 +198,36 @@ public class Fighter : MonoBehaviour
     public void EndTurn()
     {
         CurrentState = PlayerState.TurnEnd;
+        BattleContainerUI.ClearQueue();
+        BattleContainerUI.AddQueuedCardsToUI(QueuedCards);
         OnPlayerTurnSet?.Invoke();
     }
 
+    public void ProcessBattleOutcome(ActionData pOutcome)
+    {
+        //Debug.Log("Player: "+ID+" will take "+pOutcome.Damage+" damage");
+        CurrentHP -= pOutcome.Damage;
+        _FighterUI.UpdateHealth(CurrentHP);
+        CheckForDeath();
+        
+    }
+
+    private void CheckForDeath()
+    {
+        if (CurrentHP <= 0)
+        {
+            CurrentState = PlayerState.KO;
+            OnPlayerKO?.Invoke();
+        }
+    }
 }
 
 [Serializable] public class PlayerCardInHand
 {
-    [SerializeField] internal Card _card;
+    [SerializeField] internal FighterActions _card;
     [SerializeField] internal bool _isSelected;
 
-    public PlayerCardInHand(Card card, bool isSelected)
+    public PlayerCardInHand(FighterActions card, bool isSelected)
     {
         _card = card;
         _isSelected = isSelected;
