@@ -31,4 +31,4 @@ MonoBehaviour:
     Status:
       _Status: 0
       _Turns: 0
-  TypeSprite: {fileID: 0}
+  TypeSprite: {fileID: 21300000, guid: aa1a273462031fa4c958f8c941b106e0, type: 3}

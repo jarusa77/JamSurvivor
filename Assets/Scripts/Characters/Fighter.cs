@@ -42,6 +42,16 @@ public class Fighter : MonoBehaviour
     public delegate void PlayerKO();
     public static event PlayerKO OnPlayerKO;
 
+    internal int GetHP()
+    {
+        return CurrentHP;
+    }
+
+    internal int GetID()
+    {
+        return ID;
+    }
+
     private void Awake()
     {
         option1 = inputActions.FindAction("Option1");
@@ -53,7 +63,7 @@ public class Fighter : MonoBehaviour
         Hand = new List<PlayerCardInHand>();
         QueuedCards = new List<FighterActions>();
         
-        HandContainerUI.CreatePlaceholders(PlayerMaxCards);
+        
     }
 
     private void OnEnable()
@@ -79,6 +89,7 @@ public class Fighter : MonoBehaviour
     {
         VariableInitialize();
         GameManager.Instance.AddFighter(this);
+        HandContainerUI.CreatePlaceholders(PlayerMaxCards);
         
     }
 
@@ -177,7 +188,7 @@ public class Fighter : MonoBehaviour
 
     public void ProcessBattleOutcome(ActionData pOutcome)
     {
-        Debug.Log("Player: "+ID+" will take "+pOutcome.Damage+" damage");
+        //Debug.Log("Player: "+ID+" will take "+pOutcome.Damage+" damage");
         CurrentHP -= pOutcome.Damage;
         CheckForDeath();
     }

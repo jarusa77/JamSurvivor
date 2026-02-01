@@ -73,6 +73,10 @@ public class GameManager : MonoBehaviour
 
     public void BattleEnded()
     {
+        Debug.Log("Fighter ID: " + _fighters[0].GetID() +
+                  "Fighter HP: "+_fighters[0].GetHP());
+        Debug.Log("Fighter ID: " + _fighters[1].GetID() +
+                  "Fighter HP: "+_fighters[1].GetHP());
         SetupNextPlayerTurn();
     }
 
