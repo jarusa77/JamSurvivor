@@ -10,6 +10,10 @@ public class HandUI : MonoBehaviour
     private List<GameObject> HandCardsUI;
     internal List<FighterActions> _FighterActions;
 
+    private void Awake()
+    {
+        HandCardsUI = new List<GameObject>();
+    }
     public void CreatePlaceholders(int totalMaxCardsOnHand)
     {
         for (int i = 0; i < totalMaxCardsOnHand; i++)
@@ -30,10 +34,7 @@ public class HandUI : MonoBehaviour
         }
     }
 
-    private void Awake()
-    {
-        HandCardsUI = new List<GameObject>();
-    }
+
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()

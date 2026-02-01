@@ -63,7 +63,7 @@ public class Fighter : MonoBehaviour
         Hand = new List<PlayerCardInHand>();
         QueuedCards = new List<FighterActions>();
         
-        HandContainerUI.CreatePlaceholders(PlayerMaxCards);
+        
     }
 
     private void OnEnable()
@@ -89,6 +89,7 @@ public class Fighter : MonoBehaviour
     {
         VariableInitialize();
         GameManager.Instance.AddFighter(this);
+        HandContainerUI.CreatePlaceholders(PlayerMaxCards);
         
     }
 
