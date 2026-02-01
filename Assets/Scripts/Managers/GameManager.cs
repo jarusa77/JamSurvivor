@@ -35,6 +35,12 @@ public class GameManager : MonoBehaviour
         GameState = Game_State.Loading;
         Fighter.OnPlayerTurnSet += PlayerConfirmTurnEnd;
         Fighter.OnPlayerKO += PlayerGotKO;
+        TurnSystem.OnBattleResultsCalculated += GetBattleResults;
+    }
+
+    private void GetBattleResults(List<ActionStructCompact> p1, List<ActionStructCompact> p2)
+    {
+        Debug.Log("Successfull message recieved");
     }
 
     private void PlayerGotKO()
@@ -46,6 +52,7 @@ public class GameManager : MonoBehaviour
     {
         Fighter.OnPlayerTurnSet -= PlayerConfirmTurnEnd;
         Fighter.OnPlayerKO -= PlayerGotKO;
+        TurnSystem.OnBattleResultsCalculated -= GetBattleResults;
     }
 
     public void PlayerConfirmTurnEnd()
