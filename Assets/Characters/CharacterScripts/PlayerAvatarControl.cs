@@ -1,138 +1,149 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections;
-using Unity.Android.Gradle;
-using NUnit.Framework;
 using System.Collections.Generic;
-
-
-
 
 public class PlayerAvatarControl : MonoBehaviour
 {
-    delegate void AnimationAction();
+    private readonly List<IEnumerator> animationQueue = new();
 
-    List<AnimationAction> animationQueue = new List<AnimationAction>();
-    [SerializeField]
-    Animator[] animator;
-    [SerializeField]
-    Transform[] PlayerTransform;
+    [SerializeField] private Animator[] animator;          // size 2
+    [SerializeField] private Transform[] playerTransform;  // size 2
 
-    [SerializeField] float moveDistance = 1.0f;
-    [SerializeField] float moveDuration = 0.4f;
+    [SerializeField] private float moveDistance = 1.0f;
+    [SerializeField] private float moveDuration = 0.4f;
 
-    bool isMoving;
+    private bool isRunningSequence;
 
-
-    void Update()
+    private void OnEnable()
     {
-        test();
-
+        TurnSystem.OnBattleResultsCalculated += RunSequence;
     }
 
-    public void test()
-    {
-        if (Keyboard.current.spaceKey.wasPressedThisFrame)
-        {
-            RunSequence();
-        }
 
-    }
 
-    public void SetSequence()
+    public void RunSequence(List<ActionStructCompact> p1, List<ActionStructCompact> p2)
     {
-        /*
-         * Punch
-         * Kick
-         * Block
-         * MoveBack
-         * MoveForward
-         * Dodge
-         */
-        
+        animationQueue.Clear();
         QueueEngage();
-        SetTrigger("Kick", 0);
-        SetTrigger("Block", 1);
 
-        SetTrigger("Block", 0);
-        SetTrigger("Punch", 1);
+        for (int i = 0; i < p1.Count; i++)
+        {
+            switch (p1[i].actionType)
+            {
+                case ActionType.Punch:
+                    QueueTrigger("Punch", 0);
+                    break;
+                case ActionType.Kick:
+                    QueueTrigger("Punch", 0);
+                    break;
+                case ActionType.Block:
+                    QueueTrigger("Block", 0);
+                    break;
+                case ActionType.Feint:
+                    QueueTrigger("Dodge", 0);
+                    break;
+                default: //null
+                    break;
+            }
 
-        SetTrigger("Kick", 0);
-        SetTrigger("Dodge", 1);
-
+            switch (p2[i].actionType)
+            {
+                case ActionType.Punch:
+                    QueueTrigger("Punch", 1);
+                    break;
+                case ActionType.Kick:
+                    QueueTrigger("Punch", 1);
+                    break;
+                case ActionType.Block:
+                    QueueTrigger("Block", 1);
+                    break;
+                case ActionType.Feint:
+                    QueueTrigger("Dodge", 1);
+                    break;
+                default: //null
+                    break;
+            }
+        }
+        
 
         QueueDisengage();
-    }
 
-    public void RunSequence()
-    {
-        SetSequence();
-       StartCoroutine (Sequence());
-
-        
+        StartCoroutine(Sequence());
 
     }
 
     IEnumerator Sequence()
     {
+        isRunningSequence = true;
+
         for (int i = 0; i < animationQueue.Count; i++)
         {
-            animationQueue[i]?.Invoke();
-            if(i % 2==1)
-                yield return new WaitForSeconds(1f);
+            // IMPORTANT: don't StartCoroutine() a null
+            if (animationQueue[i] != null)
+                yield return StartCoroutine(animationQueue[i]);
         }
+
         animationQueue.Clear();
+        isRunningSequence = false;
     }
 
-
-        void QueueEngage()
+    void QueueTrigger(string trigger, int playerIndex)
     {
-        animationQueue.Add(() => StartCoroutine(Engage()));
+        animationQueue.Add(TriggerRoutine(trigger, playerIndex));
     }
 
-    void QueueDisengage()
+    IEnumerator TriggerRoutine(string trigger, int playerIndex)
     {
-        animationQueue.Add(() => StartCoroutine(Disengage()));
+        animator[playerIndex].SetTrigger(trigger);
+        yield break; // instant step
     }
 
-
-
-    public void SetTrigger(string Trigger,int PlayerIndex)
+    IEnumerator WaitRoutine(float seconds)
     {
-        animationQueue.Add(() => animator[PlayerIndex].SetTrigger(Trigger));
+        yield return new WaitForSeconds(seconds);
     }
 
-  
+    void QueueEngage() => animationQueue.Add(EngageBoth());
+    void QueueDisengage() => animationQueue.Add(DisengageBoth());
 
-    IEnumerator Engage()
+
+    IEnumerator EngageBoth()
     {
-        isMoving = true;
         animator[0].SetTrigger("MoveForward");
         animator[1].SetTrigger("MoveForward");
-        yield return Move(transform.forward);
-        isMoving = false;
+
+        yield return MoveBoth(
+            playerTransform[0], playerTransform[0].forward,
+            playerTransform[1], playerTransform[1].forward
+        );
     }
 
-    IEnumerator Disengage()
+    IEnumerator DisengageBoth()
     {
-        isMoving = true;
         animator[0].SetTrigger("MoveBack");
-        animator[1].SetTrigger("MoveForward");
+        animator[1].SetTrigger("MoveBack");
 
-        yield return Move(-transform.forward);
-        isMoving = false;
+        yield return MoveBoth(
+            playerTransform[0], -playerTransform[0].forward,
+            playerTransform[1], -playerTransform[1].forward
+        );
     }
 
-    IEnumerator Move(Vector3 direction)
+    IEnumerator MoveBoth(Transform a, Vector3 dirA, Transform b, Vector3 dirB)
     {
-        Vector3 start = transform.position;
-        Vector3 end = start + direction.normalized * moveDistance;
+        Vector3 startA = a.position;
+        Vector3 endA = startA + dirA.normalized * moveDistance;
+
+        Vector3 startB = b.position;
+        Vector3 endB = startB + dirB.normalized * moveDistance;
 
         float t = 0f;
         while (t < 1f)
         {
             t += Time.deltaTime / moveDuration;
-            transform.position = Vector3.Lerp(start, end, t);
+            a.position = Vector3.Lerp(startA, endA,  t);
+            b.position = Vector3.Lerp(startB, endB, t);
             yield return null;
         }
     }
