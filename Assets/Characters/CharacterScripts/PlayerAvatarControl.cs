@@ -20,6 +20,47 @@ public class PlayerAvatarControl : MonoBehaviour
         TurnSystem.OnBattleResultsCalculated += RunSequence;
     }
 
+    private void Update()
+    {
+        test();
+    }
+
+    public void test()
+    {
+        //if (isMoving) return;
+
+        if (Keyboard.current.spaceKey.wasPressedThisFrame)
+        {
+            StartCoroutine(EngageBoth());
+        }
+
+        if (Keyboard.current.backspaceKey.wasPressedThisFrame)
+        {
+            StartCoroutine(DisengageBoth());
+        }
+
+        if (Keyboard.current.kKey.wasPressedThisFrame)
+        {
+            animator[0].SetTrigger("Kick");
+        }
+
+        if (Keyboard.current.pKey.wasPressedThisFrame)
+        {
+            animator[1].SetTrigger("Punch");
+        }
+
+        if (Keyboard.current.bKey.wasPressedThisFrame)
+        {
+            animator[0].SetTrigger("Block");
+        }
+
+        if (Keyboard.current.dKey.wasPressedThisFrame)
+        {
+            animator[1].SetTrigger("Dodge");
+        }
+
+    }
+
 
 
     public void RunSequence(List<ActionStructCompact> p1, List<ActionStructCompact> p2)
