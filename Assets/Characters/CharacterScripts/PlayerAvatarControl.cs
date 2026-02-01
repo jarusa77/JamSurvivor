@@ -15,11 +15,24 @@ public class PlayerAvatarControl : MonoBehaviour
 
     private bool isRunningSequence;
 
-    public bool debugOn = false; 
+    public bool debugOn = false;
+
+    //Sounds
+    public AudioClip kickSFX;
+    public AudioClip punchSFX;
+    public AudioClip BlockSFX;
+    public AudioClip DodgeSFX;
+    public AudioClip winSFX;
+
+    public AudioClip startSFX;
+
+    SoundManager soundManager;
+
 
     private void OnEnable()
     {
         TurnSystem.OnBattleResultsCalculated += RunSequence;
+        soundManager = SoundManager.Instance;
     }
 
     private void Update()
@@ -190,4 +203,46 @@ public class PlayerAvatarControl : MonoBehaviour
             yield return null;
         }
     }
+    // -------------------------
+    // Animation Event SFX
+    // -------------------------
+
+    public void PlayKickSFX()
+    {
+        PlaySFXSafe(kickSFX);
+    }
+
+    public void PlayPunchSFX()
+    {
+        PlaySFXSafe(punchSFX);
+    }
+
+    public void PlayBlockSFX()
+    {
+        PlaySFXSafe(BlockSFX);
+    }
+
+    public void PlayDodgeSFX()
+    {
+        PlaySFXSafe(DodgeSFX);
+    }
+
+    public void PlayWinSFX()
+    {
+        PlaySFXSafe(winSFX);
+    }
+
+    public void PlayStartSFX()
+    {
+        PlaySFXSafe(startSFX);
+    }
+
+    private void PlaySFXSafe(AudioClip clip)
+    {
+        if (clip == null) return;
+        if (soundManager == null) return;
+
+        soundManager.PlaySound(clip);
+    }
+
 }

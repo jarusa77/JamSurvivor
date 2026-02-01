@@ -863,6 +863,12 @@ MonoBehaviour:
   moveDistance: 1
   moveDuration: 0.4
   debugOn: 1
+  kickSFX: {fileID: 8300000, guid: 482611fe6bc559142a00be6e726b4862, type: 3}
+  punchSFX: {fileID: 8300000, guid: 0e9bca6dd55d7e541a865752da6415f5, type: 3}
+  BlockSFX: {fileID: 8300000, guid: 0e270ecb84908054a9d6f727dbea974e, type: 3}
+  DodgeSFX: {fileID: 8300000, guid: bc742864e68de084ca074f2fffa86197, type: 3}
+  winSFX: {fileID: 0}
+  startSFX: {fileID: 0}
 --- !u!4 &838871687
 Transform:
   m_ObjectHideFlags: 0
@@ -1429,7 +1435,13 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7096528548088630559, guid: 2c876c08370157b468b34711b046e5fb, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1607835894}
+    - targetCorrespondingSourceObject: {fileID: 2696390649980905504, guid: 2c876c08370157b468b34711b046e5fb, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2073980705}
   m_SourcePrefab: {fileID: 100100000, guid: 2c876c08370157b468b34711b046e5fb, type: 3}
 --- !u!1 &1158720142
 GameObject:
@@ -2707,6 +2719,31 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1601643440}
   m_CullTransparentMesh: 1
+--- !u!1 &1607835893 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7096528548088630559, guid: 2c876c08370157b468b34711b046e5fb, type: 3}
+  m_PrefabInstance: {fileID: 1123084084}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1607835894
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1607835893}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35d257ec60b7d06469ff0ebae20e327c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  kickSFX: {fileID: 8300000, guid: bcdc82be6c76f0e498540e32394a91f7, type: 3}
+  punchSFX: {fileID: 8300000, guid: 31e79e44d15ea3944a18c347b7c52239, type: 3}
+  BlockSFX: {fileID: 8300000, guid: 07aca1ab119f37e439dce818f444683e, type: 3}
+  hitSFX: {fileID: 0}
+  DodgeSFX: {fileID: 8300000, guid: 311c72e280491984a8047e4713afb622, type: 3}
+  DashInSFX: {fileID: 8300000, guid: bcdc82be6c76f0e498540e32394a91f7, type: 3}
+  winSFX: {fileID: 0}
+  startSFX: {fileID: 0}
 --- !u!1 &1634458060
 GameObject:
   m_ObjectHideFlags: 0
@@ -3427,6 +3464,31 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TurnSystem
   NoAction: {fileID: 11400000, guid: 82ac44dfe79486a4bb7b6b9f32475c65, type: 2}
+--- !u!1 &2073980704 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2696390649980905504, guid: 2c876c08370157b468b34711b046e5fb, type: 3}
+  m_PrefabInstance: {fileID: 1123084084}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2073980705
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2073980704}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35d257ec60b7d06469ff0ebae20e327c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CharSFX
+  kickSFX: {fileID: 8300000, guid: b263163ebdb31014eac7b8cc54f80ee1, type: 3}
+  punchSFX: {fileID: 8300000, guid: c6753a7c528a07d49bd5b58f26fa80e3, type: 3}
+  BlockSFX: {fileID: 8300000, guid: 160fdb708b67b05499c4006d10440d65, type: 3}
+  hitSFX: {fileID: 0}
+  DodgeSFX: {fileID: 8300000, guid: 311c72e280491984a8047e4713afb622, type: 3}
+  DashInSFX: {fileID: 8300000, guid: 047380699c115e349983d0e3bce6272d, type: 3}
+  winSFX: {fileID: 0}
+  startSFX: {fileID: 0}
 --- !u!1 &2092951231
 GameObject:
   m_ObjectHideFlags: 0
