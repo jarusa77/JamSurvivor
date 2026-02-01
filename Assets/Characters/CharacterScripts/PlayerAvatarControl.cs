@@ -13,18 +13,16 @@ public class PlayerAvatarControl : MonoBehaviour
     delegate void AnimationAction();
 
     List<AnimationAction> animationQueue = new List<AnimationAction>();
-
-    Animator animator;
+    [SerializeField]
+    Animator[] animator;
+    [SerializeField]
+    Transform[] PlayerTransform;
 
     [SerializeField] float moveDistance = 1.0f;
     [SerializeField] float moveDuration = 0.4f;
 
     bool isMoving;
 
-    void Awake()
-    {
-        animator = GetComponent<Animator>();
-    }
 
     void Update()
     {
@@ -43,13 +41,25 @@ public class PlayerAvatarControl : MonoBehaviour
 
     public void SetSequence()
     {
+        /*
+         * Punch
+         * Kick
+         * Block
+         * MoveBack
+         * MoveForward
+         * Dodge
+         */
         
         QueueEngage();
-        animationQueue.Add(Kick);
-        animationQueue.Add(Punch);
+        SetTrigger("Kick", 0);
+        SetTrigger("Block", 1);
 
-        animationQueue.Add(Block);
-        animationQueue.Add(Dodge);
+        SetTrigger("Block", 0);
+        SetTrigger("Punch", 1);
+
+        SetTrigger("Kick", 0);
+        SetTrigger("Dodge", 1);
+
 
         QueueDisengage();
     }
@@ -68,7 +78,8 @@ public class PlayerAvatarControl : MonoBehaviour
         for (int i = 0; i < animationQueue.Count; i++)
         {
             animationQueue[i]?.Invoke();
-            yield return new WaitForSeconds(1f);
+            if(i % 2==1)
+                yield return new WaitForSeconds(1f);
         }
         animationQueue.Clear();
     }
@@ -86,30 +97,18 @@ public class PlayerAvatarControl : MonoBehaviour
 
 
 
-    public void Kick()
+    public void SetTrigger(string Trigger,int PlayerIndex)
     {
-        animator.SetTrigger("Kick");
+        animationQueue.Add(() => animator[PlayerIndex].SetTrigger(Trigger));
     }
 
-    public void Punch()
-    {
-        animator.SetTrigger("Punch");
-    }
-
-    public void Block()
-    {
-        animator.SetTrigger("Block");
-    }
-
-    public void  Dodge()
-    {
-        animator.SetTrigger("Dodge");
-    }
+  
 
     IEnumerator Engage()
     {
         isMoving = true;
-        animator.SetTrigger("MoveForward");
+        animator[0].SetTrigger("MoveForward");
+        animator[1].SetTrigger("MoveForward");
         yield return Move(transform.forward);
         isMoving = false;
     }
@@ -117,7 +116,9 @@ public class PlayerAvatarControl : MonoBehaviour
     IEnumerator Disengage()
     {
         isMoving = true;
-        animator.SetTrigger("MoveBack");
+        animator[0].SetTrigger("MoveBack");
+        animator[1].SetTrigger("MoveForward");
+
         yield return Move(-transform.forward);
         isMoving = false;
     }
