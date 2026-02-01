@@ -1,100 +1,55 @@
-using UnityEngine;
+﻿using UnityEngine;
+using System.Collections;
 
-public class EventFXController : MonoBehaviour
+public class TimedParticleController : MonoBehaviour
 {
-    public enum FXMode
-    {
-        ParticleSystem,
-        Prefab
-    }
-
-    [Header("FX Type")]
-    public FXMode fxMode = FXMode.ParticleSystem;
-
-    [Header("Particle System")]
+    [Header("Particle Settings")]
     public ParticleSystem particleSystemToControl;
+    public float disableAfterSeconds = 2f;
 
-    [Header("Prefab FX")]
-    public GameObject fxPrefab;
-    public Transform spawnPoint;
-    public bool destroyOnDisable = true;
-
-    private GameObject spawnedFX;
+    private Coroutine disableRoutine;
 
     void Awake()
     {
-        if (spawnPoint == null)
-            spawnPoint = transform;
+        if (particleSystemToControl == null)
+            particleSystemToControl = GetComponent<ParticleSystem>();
     }
 
-    // ?? CALL FROM EVENT
-    public void TurnOnFX()
+    // 🔥 Call from event or code
+    public void PlayParticles()
     {
-        if (fxMode == FXMode.ParticleSystem)
-        {
-            if (particleSystemToControl == null) return;
+        if (particleSystemToControl == null) return;
 
-            if (!particleSystemToControl.isPlaying)
-                particleSystemToControl.Play();
-        }
-        else
-        {
-            if (fxPrefab == null) return;
+        particleSystemToControl.Play();
 
-            if (spawnedFX == null)
-            {
-                spawnedFX = Instantiate(fxPrefab, spawnPoint.position, spawnPoint.rotation, spawnPoint);
-            }
-            else
-            {
-                spawnedFX.SetActive(true);
-            }
-        }
+        if (disableRoutine != null)
+            StopCoroutine(disableRoutine);
+
+        disableRoutine = StartCoroutine(DisableAfterTime());
     }
 
-    // ?? CALL FROM EVENT
-    public void TurnOffFX()
+    // ❄️ Call from event or code
+    public void StopParticles()
     {
-        if (fxMode == FXMode.ParticleSystem)
-        {
-            if (particleSystemToControl == null) return;
+        if (particleSystemToControl == null) return;
 
-            particleSystemToControl.Stop(true, ParticleSystemStopBehavior.StopEmitting);
-        }
-        else
+        if (disableRoutine != null)
         {
-            if (spawnedFX == null) return;
-
-            if (destroyOnDisable)
-            {
-                Destroy(spawnedFX);
-                spawnedFX = null;
-            }
-            else
-            {
-                spawnedFX.SetActive(false);
-            }
+            StopCoroutine(disableRoutine);
+            disableRoutine = null;
         }
+
+        particleSystemToControl.Stop(true, ParticleSystemStopBehavior.StopEmitting);
     }
 
-    // ?? OPTIONAL
-    public void ToggleFX()
+    IEnumerator DisableAfterTime()
     {
-        if (fxMode == FXMode.ParticleSystem)
-        {
-            if (particleSystemToControl == null) return;
+        yield return new WaitForSeconds(disableAfterSeconds);
 
-            if (particleSystemToControl.isPlaying)
-                TurnOffFX();
-            else
-                TurnOnFX();
-        }
-        else
-        {
-            if (spawnedFX == null || !spawnedFX.activeSelf)
-                TurnOnFX();
-            else
-                TurnOffFX();
-        }
+        particleSystemToControl.Stop(true, ParticleSystemStopBehavior.StopEmitting);
+        disableRoutine = null;
+        gameObject.SetActive(false);
     }
+
 }
+

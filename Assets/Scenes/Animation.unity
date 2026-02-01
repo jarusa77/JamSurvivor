@@ -558,24 +558,6 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_RenderingLayers: 1
   m_ShadowRenderingLayers: 1
---- !u!1 &1692643495 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3169266819891425665, guid: e2c76ff46f9828644a5d8221eca5d037, type: 3}
-  m_PrefabInstance: {fileID: 2725427283159973777}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1692643496
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1692643495}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 65aabaf214c126f40b260ea38fa1041c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EventParticleController
-  particleSystemToControl: {fileID: 0}
 --- !u!4 &1822941955 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3011139072676577264, guid: e6c93dd85062cd044adfd4203470bf6d, type: 3}
@@ -702,10 +684,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 3169266819891425665, guid: e2c76ff46f9828644a5d8221eca5d037, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1692643496}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e2c76ff46f9828644a5d8221eca5d037, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
