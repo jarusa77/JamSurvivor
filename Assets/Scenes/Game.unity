@@ -1435,13 +1435,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 7096528548088630559, guid: 2c876c08370157b468b34711b046e5fb, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1607835894}
-    - targetCorrespondingSourceObject: {fileID: 2696390649980905504, guid: 2c876c08370157b468b34711b046e5fb, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2073980705}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2c876c08370157b468b34711b046e5fb, type: 3}
 --- !u!1 &1158720142
 GameObject:
@@ -1549,10 +1543,14 @@ MonoBehaviour:
   ID: 2
   Hand: []
   MaxHP: 100
+  PlayerMaxCards: 5
+  MaxMana: 3
   CurrentMana: 0
+  QueuedCards: []
   inputActions: {fileID: -944628639613478452, guid: 17fae74a0f3f99f4ebb9c28245164c14, type: 3}
   HandContainerUI: {fileID: 1296436817}
   BattleContainerUI: {fileID: 344524965}
+  _FighterUI: {fileID: 0}
 --- !u!4 &1237985678
 Transform:
   m_ObjectHideFlags: 0
@@ -2719,31 +2717,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1601643440}
   m_CullTransparentMesh: 1
---- !u!1 &1607835893 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7096528548088630559, guid: 2c876c08370157b468b34711b046e5fb, type: 3}
-  m_PrefabInstance: {fileID: 1123084084}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1607835894
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1607835893}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 35d257ec60b7d06469ff0ebae20e327c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: '::'
-  kickSFX: {fileID: 8300000, guid: bcdc82be6c76f0e498540e32394a91f7, type: 3}
-  punchSFX: {fileID: 8300000, guid: 31e79e44d15ea3944a18c347b7c52239, type: 3}
-  BlockSFX: {fileID: 8300000, guid: 07aca1ab119f37e439dce818f444683e, type: 3}
-  hitSFX: {fileID: 0}
-  DodgeSFX: {fileID: 8300000, guid: 311c72e280491984a8047e4713afb622, type: 3}
-  DashInSFX: {fileID: 8300000, guid: bcdc82be6c76f0e498540e32394a91f7, type: 3}
-  winSFX: {fileID: 0}
-  startSFX: {fileID: 0}
 --- !u!1 &1634458060
 GameObject:
   m_ObjectHideFlags: 0
@@ -3436,6 +3409,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb9a0ac106a1e0248a6b0853cb9db03a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
+  RoundText: {fileID: 0}
 --- !u!4 &2023527514
 Transform:
   m_ObjectHideFlags: 0
@@ -3464,31 +3438,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TurnSystem
   NoAction: {fileID: 11400000, guid: 82ac44dfe79486a4bb7b6b9f32475c65, type: 2}
---- !u!1 &2073980704 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2696390649980905504, guid: 2c876c08370157b468b34711b046e5fb, type: 3}
-  m_PrefabInstance: {fileID: 1123084084}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &2073980705
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2073980704}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 35d257ec60b7d06469ff0ebae20e327c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CharSFX
-  kickSFX: {fileID: 8300000, guid: b263163ebdb31014eac7b8cc54f80ee1, type: 3}
-  punchSFX: {fileID: 8300000, guid: c6753a7c528a07d49bd5b58f26fa80e3, type: 3}
-  BlockSFX: {fileID: 8300000, guid: 160fdb708b67b05499c4006d10440d65, type: 3}
-  hitSFX: {fileID: 0}
-  DodgeSFX: {fileID: 8300000, guid: 311c72e280491984a8047e4713afb622, type: 3}
-  DashInSFX: {fileID: 8300000, guid: 047380699c115e349983d0e3bce6272d, type: 3}
-  winSFX: {fileID: 0}
-  startSFX: {fileID: 0}
 --- !u!1 &2092951231
 GameObject:
   m_ObjectHideFlags: 0
@@ -3635,10 +3584,14 @@ MonoBehaviour:
   ID: 1
   Hand: []
   MaxHP: 100
+  PlayerMaxCards: 5
+  MaxMana: 3
   CurrentMana: 0
+  QueuedCards: []
   inputActions: {fileID: -944628639613478452, guid: c55e8d485fbabd74484d592a6b029469, type: 3}
   HandContainerUI: {fileID: 1634458063}
   BattleContainerUI: {fileID: 291157245}
+  _FighterUI: {fileID: 0}
 --- !u!4 &2126587732
 Transform:
   m_ObjectHideFlags: 0
