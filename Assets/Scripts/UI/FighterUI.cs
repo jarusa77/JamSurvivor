@@ -9,6 +9,7 @@ public class FighterUI : MonoBehaviour
 
     private GameObject StaminaContainer;
     private TextMeshProUGUI StaminaText;
+    private HealthBarUI _HealthBarUI;
     
     void Start()
     {
@@ -16,12 +17,18 @@ public class FighterUI : MonoBehaviour
         HealthText = HealthContainer.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
         StaminaContainer = transform.GetChild(1).gameObject;
         StaminaText = StaminaContainer.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
+        _HealthBarUI = HealthContainer.transform.GetChild(2).GetComponent<HealthBarUI>();
     }
 
-    // Update is called once per frame
-    public void updateHealth(int health)
+    public void InitializeValues(int maxHealth, int currentHealth, int maxStamina, int currentStamina)
+    {
+        _HealthBarUI.InitailizeValues(maxHealth, currentHealth);
+    }
+
+    public void UpdateHealth(int health)
     {
         HealthText.text = health.ToString();
+        _HealthBarUI.SetHealth(health);
     }
 
     public void UpdateStamina(int stamina)

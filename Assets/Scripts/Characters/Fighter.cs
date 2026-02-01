@@ -108,6 +108,7 @@ public class Fighter : MonoBehaviour
     {
         CurrentHP = MaxHP;
         CurrentMana = MaxMana;
+        _FighterUI.InitializeValues(MaxHP, CurrentHP, MaxMana, CurrentMana);
     }
 
     void Update()
@@ -206,7 +207,7 @@ public class Fighter : MonoBehaviour
     {
         //Debug.Log("Player: "+ID+" will take "+pOutcome.Damage+" damage");
         CurrentHP -= pOutcome.Damage;
-        _FighterUI.updateHealth(CurrentHP);
+        _FighterUI.UpdateHealth(CurrentHP);
         CheckForDeath();
         
     }
