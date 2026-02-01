@@ -88,9 +88,8 @@ public class Fighter : MonoBehaviour
     void Start()
     {
         VariableInitialize();
-        GameManager.Instance.AddFighter(this);
         HandContainerUI.CreatePlaceholders(PlayerMaxCards);
-        
+        GameManager.Instance.AddFighter(this);
     }
 
     void VariableInitialize()
@@ -182,6 +181,7 @@ public class Fighter : MonoBehaviour
     public void EndTurn()
     {
         CurrentState = PlayerState.TurnEnd;
+        BattleContainerUI.ClearQueue();
         BattleContainerUI.AddQueuedCardsToUI(QueuedCards);
         OnPlayerTurnSet?.Invoke();
     }

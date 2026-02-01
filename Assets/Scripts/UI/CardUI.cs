@@ -29,6 +29,6 @@ public class CardUI : MonoBehaviour
     {
         UnityEngine.UI.Image actionImage = AttackImageContainer.GetComponent<UnityEngine.UI.Image>();
         actionImage.sprite = spriteImage;
-        AttackImageContainer.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = actionType.ToString();
+        AttackImageContainer.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = actionType.ToString().ToUpper();
     }
 }
