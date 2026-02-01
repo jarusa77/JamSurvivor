@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 public class PlayerAvatarControl : MonoBehaviour
 {
-    private readonly List<IEnumerator> animationQueue = new();
+    private  List<IEnumerator> animationQueue = new List<IEnumerator>();
 
     [SerializeField] private Animator[] animator;          // size 2
     [SerializeField] private Transform[] playerTransform;  // size 2
@@ -17,85 +17,38 @@ public class PlayerAvatarControl : MonoBehaviour
 
     public bool debugOn = false;
 
-    //Sounds
-    public AudioClip kickSFX;
-    public AudioClip punchSFX;
-    public AudioClip BlockSFX;
-    public AudioClip DodgeSFX;
-    public AudioClip winSFX;
+    public Fighter player1;
+    public Fighter player2;
 
-    public AudioClip startSFX;
 
-    SoundManager soundManager;
 
 
     private void OnEnable()
     {
         TurnSystem.OnBattleResultsCalculated += RunSequence;
-        soundManager = SoundManager.Instance;
+       
     }
-
-    private void Update()
-    {
-        test();
-    }
-
-    public void test()
-    {
-        if(!debugOn) { return; }
-
-        if (Keyboard.current.spaceKey.wasPressedThisFrame)
-        {
-            StartCoroutine(EngageBoth());
-        }
-
-        if (Keyboard.current.backspaceKey.wasPressedThisFrame)
-        {
-            StartCoroutine(DisengageBoth());
-        }
-
-        if (Keyboard.current.kKey.wasPressedThisFrame)
-        {
-            animator[0].SetTrigger("Kick");
-        }
-
-        if (Keyboard.current.pKey.wasPressedThisFrame)
-        {
-            animator[1].SetTrigger("Punch");
-        }
-
-        if (Keyboard.current.bKey.wasPressedThisFrame)
-        {
-            animator[0].SetTrigger("Block");
-        }
-
-        if (Keyboard.current.dKey.wasPressedThisFrame)
-        {
-            animator[1].SetTrigger("Dodge");
-        }
-
-    }
-
 
 
     public void RunSequence(List<ActionStructCompact> p1, List<ActionStructCompact> p2)
     {
         animationQueue.Clear();
-        QueueEngage();
+        animationQueue = new List<IEnumerator>();
+        //QueueEngage();
 
         Debug.Log("P1 count" + p1.Count);
         Debug.Log("P2 count" + p2.Count);
 
         for (int i = 0; i < p1.Count; i++)
         {
-            
+            Debug.Log("P1 Action: " + p1[i].actionType);
             switch (p1[i].actionType)
             {
                 case ActionType.Punch:
                     QueueTrigger("Punch", 0);
                     break;
                 case ActionType.Kick:
-                    QueueTrigger("Punch", 0);
+                    QueueTrigger("Kick", 0);
                     break;
                 case ActionType.Block:
                     QueueTrigger("Block", 0);
@@ -107,13 +60,14 @@ public class PlayerAvatarControl : MonoBehaviour
                     break;
             }
 
+            Debug.Log("P2 Action: " + p2[i].actionType);
             switch (p2[i].actionType)
             {
                 case ActionType.Punch:
                     QueueTrigger("Punch", 1);
                     break;
                 case ActionType.Kick:
-                    QueueTrigger("Punch", 1);
+                    QueueTrigger("Kick", 1);
                     break;
                 case ActionType.Block:
                     QueueTrigger("Block", 1);
@@ -124,18 +78,46 @@ public class PlayerAvatarControl : MonoBehaviour
                 default: //null
                     break;
             }
+
+            int p1health = player1.GetHP();
+            int p2health = player2.GetHP();
+
+            if (p1health <=0 && p2health <= 0)
+            {
+                QueueTrigger("Dying", 0);
+                QueueTrigger("Dying", 1);
+                StartCoroutine(Sequence());
+                return;
+            }
+            else if(p1health <=0)
+            {
+                QueueTrigger("Dying", 0);
+                QueueTrigger("Victory", 1);
+                StartCoroutine(Sequence());
+                return;
+            }
+            else if(p2health <=0)
+            {
+                QueueTrigger("Victory", 0);
+                QueueTrigger("Dying", 1);
+                StartCoroutine(Sequence());
+                return;
+            }
+
+
         }
-        
 
-        QueueDisengage();
+        StartCoroutine(EngageBoth());
 
-        StartCoroutine(Sequence());
+        //QueueDisengage();
+        //StartCoroutine(Sequence());
 
     }
 
     IEnumerator Sequence()
     {
         isRunningSequence = true;
+        
 
         for (int i = 0; i < animationQueue.Count; i++)
         {
@@ -143,9 +125,11 @@ public class PlayerAvatarControl : MonoBehaviour
             if (animationQueue[i] != null)
                 yield return StartCoroutine(animationQueue[i]);
         }
+      
 
         animationQueue.Clear();
         isRunningSequence = false;
+        StartCoroutine(DisengageBoth());
     }
 
     void QueueTrigger(string trigger, int playerIndex)
@@ -177,6 +161,8 @@ public class PlayerAvatarControl : MonoBehaviour
             playerTransform[0], playerTransform[0].forward,
             playerTransform[1], playerTransform[1].forward
         );
+
+        StartCoroutine(Sequence());
     }
 
     IEnumerator DisengageBoth()
@@ -207,46 +193,4 @@ public class PlayerAvatarControl : MonoBehaviour
             yield return null;
         }
     }
-    // -------------------------
-    // Animation Event SFX
-    // -------------------------
-
-    public void PlayKickSFX()
-    {
-        PlaySFXSafe(kickSFX);
-    }
-
-    public void PlayPunchSFX()
-    {
-        PlaySFXSafe(punchSFX);
-    }
-
-    public void PlayBlockSFX()
-    {
-        PlaySFXSafe(BlockSFX);
-    }
-
-    public void PlayDodgeSFX()
-    {
-        PlaySFXSafe(DodgeSFX);
-    }
-
-    public void PlayWinSFX()
-    {
-        PlaySFXSafe(winSFX);
-    }
-
-    public void PlayStartSFX()
-    {
-        PlaySFXSafe(startSFX);
-    }
-
-    private void PlaySFXSafe(AudioClip clip)
-    {
-        if (clip == null) return;
-        if (soundManager == null) return;
-
-        soundManager.PlaySound(clip);
-    }
-
 }

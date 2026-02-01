@@ -4,7 +4,6 @@ using UnityEngine;
 public class BattleCardUI : MonoBehaviour
 {
     [SerializeField] GameObject CardUIPrefab;
-    private int PlayerID;
 
     //Call only after Turn is done and before Draw Card
     public void ClearQueue()
@@ -17,12 +16,10 @@ public class BattleCardUI : MonoBehaviour
     //For now adding all cards in bulk - adding it once player confirms turn
     public void AddQueuedCardsToUI(List<FighterActions> pActions)
     {
-        int index = 0;
         foreach (FighterActions pAction in pActions)
         {
             var gameobject = Instantiate(CardUIPrefab, this.transform);
-            gameobject.GetComponent<CardUI>().InitializeCardUI(pAction, -1,-1);
-            index++;
+            gameobject.GetComponent<CardUI>().InitializeCardUI(pAction);
         }
     }
 

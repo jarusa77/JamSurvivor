@@ -1,4 +1,3 @@
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,7 +13,6 @@ public class HealthBarUI : MonoBehaviour
     {
         MaxHealth = maxHealth;
         CurrentHealth = currentHealth;
-        UpdateBar();
     }
 
     void Start()

@@ -9,15 +9,13 @@ public class HandUI : MonoBehaviour
     [SerializeField] private GameObject CardUIPrefab;
     private List<GameObject> HandCardsUI;
     internal List<FighterActions> _FighterActions;
-    private int PlayerID;
 
     private void Awake()
     {
         HandCardsUI = new List<GameObject>();
     }
-    public void CreatePlaceholders(int totalMaxCardsOnHand, int playerID)
+    public void CreatePlaceholders(int totalMaxCardsOnHand)
     {
-        PlayerID = playerID;
         for (int i = 0; i < totalMaxCardsOnHand; i++)
         {
             GameObject card = Instantiate(CardUIPrefab, this.transform);
@@ -31,7 +29,7 @@ public class HandUI : MonoBehaviour
         int index = 0;
         foreach (GameObject obj in HandCardsUI)
         {
-            obj.GetComponent<CardUI>().InitializeCardUI(currentPlayerHand[index]._card, PlayerID, index);
+            obj.GetComponent<CardUI>().InitializeCardUI(currentPlayerHand[index]._card);
             index++;
         }
     }
