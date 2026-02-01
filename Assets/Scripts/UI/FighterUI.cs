@@ -10,6 +10,7 @@ public class FighterUI : MonoBehaviour
     private GameObject StaminaContainer;
     private TextMeshProUGUI StaminaText;
     private HealthBarUI _HealthBarUI;
+    private StaminaBarUI _StaminaBarUI;
     
     void Start()
     {
@@ -18,11 +19,20 @@ public class FighterUI : MonoBehaviour
         StaminaContainer = transform.GetChild(1).gameObject;
         StaminaText = StaminaContainer.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
         _HealthBarUI = HealthContainer.transform.GetChild(2).GetComponent<HealthBarUI>();
+        _StaminaBarUI = StaminaContainer.transform.GetChild(2).GetComponent<StaminaBarUI>();
+    }
+
+    private void SetStaminaContainer()
+    {
+        
     }
 
     public void InitializeValues(int maxHealth, int currentHealth, int maxStamina, int currentStamina)
     {
         _HealthBarUI.InitailizeValues(maxHealth, currentHealth);
+        HealthText.text = currentHealth.ToString();
+        _StaminaBarUI.InitailizeValues(maxStamina, currentStamina);
+        
     }
 
     public void UpdateHealth(int health)
@@ -34,5 +44,7 @@ public class FighterUI : MonoBehaviour
     public void UpdateStamina(int stamina)
     {
         StaminaText.text = stamina.ToString();
+        _StaminaBarUI.SetStamina(stamina);
+        
     }
 }

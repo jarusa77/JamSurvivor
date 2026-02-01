@@ -100,7 +100,7 @@ public class Fighter : MonoBehaviour
     void Start()
     {
         VariableInitialize();
-        HandContainerUI.CreatePlaceholders(PlayerMaxCards);
+        HandContainerUI.CreatePlaceholders(PlayerMaxCards, ID);
         GameManager.Instance.AddFighter(this);
     }
 
