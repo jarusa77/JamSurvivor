@@ -15,6 +15,8 @@ public class FighterActions : ScriptableObject
     public ActionData Partial;
     public ActionData Miss;
     
+    public Sprite TypeSprite;
+    
     
     
 #if UNITY_EDITOR

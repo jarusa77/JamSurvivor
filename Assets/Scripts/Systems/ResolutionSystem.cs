@@ -16,7 +16,7 @@ public static class ResolutionSystem
     {
         ActionResult[,] resultMatrix =
         {
-            //Punch,               Kick,                   Block,                  Feint,       None               
+                        //Punch,               Kick,                   Block,                  Feint,       None               
             /*Punch */
             { ActionResult.Full, ActionResult.Partial, ActionResult.Partial, ActionResult.Miss, ActionResult.Full },
             /*Kick */
@@ -25,44 +25,9 @@ public static class ResolutionSystem
             { ActionResult.Miss, ActionResult.Miss, ActionResult.Miss, ActionResult.Miss, ActionResult.Full },
             /*Feint */
             { ActionResult.Miss, ActionResult.Miss, ActionResult.Miss, ActionResult.Miss, ActionResult.Full },
-            /*None */ { ActionResult.Miss, ActionResult.Miss, ActionResult.Miss, ActionResult.Miss, ActionResult.Full },
+            /*None */ 
+            { ActionResult.Miss, ActionResult.Miss, ActionResult.Miss, ActionResult.Miss, ActionResult.Full },
         };
-
-        /*
-        ActionResult[][] resultMatrix = new ActionResult[4][];
-        for (int index = 0; index < 4; index++)
-        {
-            resultMatrix[index] = new ActionResult[4];
-        }
-
-
-        //Punch x Punch, Kick, Block, Feint
-        resultMatrix[0][0] = ActionResult.Full;
-        resultMatrix[0][1] = ActionResult.Partial;
-        resultMatrix[0][2] = ActionResult.Partial;
-        resultMatrix[0][3] = ActionResult.Miss;
-
-        //Kick x Punch, Kick, Block, Feint
-        resultMatrix[1][0] = ActionResult.Full;
-        resultMatrix[1][1] = ActionResult.Partial;
-        resultMatrix[1][2] = ActionResult.Partial;
-        resultMatrix[1][3] = ActionResult.Miss;
-
-        //Block x Punch, Kick, Block, Feint
-        resultMatrix[2][0] = ActionResult.Miss;
-        resultMatrix[2][1] = ActionResult.Miss;
-        resultMatrix[2][2] = ActionResult.Miss;
-        resultMatrix[2][3] = ActionResult.Miss;
-
-        //Feint x Punch, Kick, Block, Feint
-        resultMatrix[3][0] = ActionResult.Miss;
-        resultMatrix[3][1] = ActionResult.Miss;
-        resultMatrix[3][2] = ActionResult.Miss;
-        resultMatrix[3][3] = ActionResult.Miss;
-
-        int indexAttack = 0;
-        int indexRecieve = 0;
-        */
         ActionResult outcome = resultMatrix[(int)attacker._ActionType, (int)reciever._ActionType];
         AttackOutcome resultingBattle = new AttackOutcome();
         switch (outcome)

@@ -12,7 +12,7 @@ public class Fighter : MonoBehaviour
     [SerializeField] List<PlayerCardInHand> Hand;
     public int MaxHP = 100;
     private int CurrentHP;
-    private static int PlayerMaxCards = 5;
+    [SerializeField] private static int PlayerMaxCards = 5;
     public static int MaxMana = 3;
     public int CurrentMana;
 
@@ -26,7 +26,9 @@ public class Fighter : MonoBehaviour
     private InputAction option4;
     private InputAction option5;
     private InputAction turnEnd;
-    
+
+    [SerializeField] HandUI HandContainerUI;
+    [SerializeField] private BattleCardUI BattleContainerUI;
     
     
 
@@ -50,6 +52,8 @@ public class Fighter : MonoBehaviour
         turnEnd = inputActions.FindAction("TurnEnd");
         Hand = new List<PlayerCardInHand>();
         QueuedCards = new List<FighterActions>();
+        
+        HandContainerUI.CreatePlaceholders(PlayerMaxCards);
     }
 
     private void OnEnable()
@@ -116,6 +120,8 @@ public class Fighter : MonoBehaviour
         CurrentState = PlayerState.Idle;
         CurrentMana = MaxMana;
         QueuedCards.Clear();
+        
+        HandContainerUI.PopulateHandUI(Hand);
     }
 
     private void SelectCardForQueue(int index)
@@ -138,11 +144,14 @@ public class Fighter : MonoBehaviour
         }
         else
         {
+            Debug.Log("Player attempted to de-select a card, currently not allowed");
+            /*
             //player "de-selected" the card from the queue - hence returning the mana cost.
             Hand[index]._isSelected = false;
             CurrentMana += Hand[index]._card._ManaCost;
             //TODO : will need to validate deep copy and ID comparison so that if a player selects multiple of the same card, it will only remove that from the queue
             QueuedCards.Remove(Hand[index]._card);
+            */
         }
     }
 
@@ -162,6 +171,7 @@ public class Fighter : MonoBehaviour
     public void EndTurn()
     {
         CurrentState = PlayerState.TurnEnd;
+        BattleContainerUI.AddQueuedCardsToUI(QueuedCards);
         OnPlayerTurnSet?.Invoke();
     }
 

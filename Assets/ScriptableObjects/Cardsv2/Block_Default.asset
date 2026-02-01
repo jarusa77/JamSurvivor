@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Block_Default
   m_EditorClassIdentifier: Assembly-CSharp::FighterActions
   uniqueID: 70bca72f42aab9841b302c8ff8908326
-  Name: 
-  ManaCost: 0
+  Name: Block
+  _ManaCost: 1
   _ActionType: 2
   Full:
     Damage: 0
@@ -31,3 +31,4 @@ MonoBehaviour:
     Status:
       _Status: 0
       _Turns: 0
+  TypeSprite: {fileID: 0}

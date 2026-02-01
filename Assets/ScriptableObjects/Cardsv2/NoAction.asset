@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bedc272a70dfdd14f866791044f7daec, type: 3}
   m_Name: NoAction
   m_EditorClassIdentifier: Assembly-CSharp::FighterActions
-  uniqueID: 
+  uniqueID: ae208d0c64cc3ff469fad69b9721a727
   Name: 
   _ManaCost: 0
-  _ActionType: 0
+  _ActionType: 4
   Full:
     Damage: 0
     Status:

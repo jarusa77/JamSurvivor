@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FighterActions
   uniqueID: ec08da0e8a986a24484d46a36f8b7e4a
   Name: 
-  ManaCost: 0
+  _ManaCost: 2
   _ActionType: 3
   Full:
     Damage: 0
@@ -31,3 +31,4 @@ MonoBehaviour:
     Status:
       _Status: 0
       _Turns: 0
+  TypeSprite: {fileID: 0}
