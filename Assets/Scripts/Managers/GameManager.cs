@@ -8,6 +8,7 @@ internal enum Game_State
     Loading,
     PlayerTurn,
     TurnExecute,
+    KOEvaluation,
     GameOver,
     Pause
 }
@@ -33,16 +34,29 @@ public class GameManager : MonoBehaviour
         _fighters = new List<Fighter>();
         GameState = Game_State.Loading;
         Fighter.OnPlayerTurnSet += PlayerConfirmTurnEnd;
+        Fighter.OnPlayerKO += PlayerGotKO;
+        TurnSystem.OnBattleResultsCalculated += GetBattleResults;
+    }
+
+    private void GetBattleResults(List<ActionStructCompact> p1, List<ActionStructCompact> p2)
+    {
+        Debug.Log("Successfull message recieved");
+    }
+
+    private void PlayerGotKO()
+    {
+        GameState =  Game_State.KOEvaluation;
     }
 
     private void OnDestroy()
     {
         Fighter.OnPlayerTurnSet -= PlayerConfirmTurnEnd;
+        Fighter.OnPlayerKO -= PlayerGotKO;
+        TurnSystem.OnBattleResultsCalculated -= GetBattleResults;
     }
 
     public void PlayerConfirmTurnEnd()
     {
-        Debug.Log("A Player Ended their turn");
         //Check for all fighters states if they both ended their turn.
         //Alternatively, just keep a local game manager varialbe, but then if a player wants to change their opinion after lock in, would need to recall event.
         if (_fighters.Any(x => x.CurrentState != PlayerState.TurnEnd))
@@ -53,7 +67,12 @@ public class GameManager : MonoBehaviour
 
     private void SendDataToTurnExecuteSystem()
     {
-        Debug.Log("Ready to Execute Battle");
+        TurnSystem.Instance.ExecuteBattle(_fighters[0], _fighters[1]);
+        BattleEnded();
+    }
+
+    public void BattleEnded()
+    {
         SetupNextPlayerTurn();
     }
 
