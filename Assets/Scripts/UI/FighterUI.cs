@@ -12,7 +12,7 @@ public class FighterUI : MonoBehaviour
     private HealthBarUI _HealthBarUI;
     private StaminaBarUI _StaminaBarUI;
     
-    void Start()
+    void Awake()
     {
         HealthContainer = transform.GetChild(0).gameObject;
         HealthText = HealthContainer.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
@@ -22,28 +22,35 @@ public class FighterUI : MonoBehaviour
         _StaminaBarUI = StaminaContainer.transform.GetChild(2).GetComponent<StaminaBarUI>();
     }
 
-    private void SetStaminaContainer()
+    private void SetupContainers()
     {
-        
+        HealthContainer = transform.GetChild(0).gameObject;
+        //HealthText = HealthContainer.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
+        StaminaContainer = transform.GetChild(1).gameObject;
+        //StaminaText = StaminaContainer.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
+        _HealthBarUI = HealthContainer.transform.GetChild(1).GetComponent<HealthBarUI>();
+        _StaminaBarUI = StaminaContainer.transform.GetChild(2).GetComponent<StaminaBarUI>();
     }
 
     public void InitializeValues(int maxHealth, int currentHealth, int maxStamina, int currentStamina)
     {
+        if(!_HealthBarUI)
+            SetupContainers();
         _HealthBarUI.InitailizeValues(maxHealth, currentHealth);
-        HealthText.text = currentHealth.ToString();
+        //HealthText.text = currentHealth.ToString();
         _StaminaBarUI.InitailizeValues(maxStamina, currentStamina);
         
     }
 
     public void UpdateHealth(int health)
     {
-        HealthText.text = health.ToString();
+        //HealthText.text = health.ToString();
         _HealthBarUI.SetHealth(health);
     }
 
     public void UpdateStamina(int stamina)
     {
-        StaminaText.text = stamina.ToString();
+        //StaminaText.text = stamina.ToString();
         _StaminaBarUI.SetStamina(stamina);
         
     }

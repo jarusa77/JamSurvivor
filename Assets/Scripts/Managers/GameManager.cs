@@ -18,6 +18,8 @@ public class GameManager : MonoBehaviour
 
     public static GameManager Instance;
     internal Game_State GameState = Game_State.Loading;
+    
+    [SerializeField] private EndGameCreditsLoader _EndGameCreditsLoader;
 
     public delegate void ToggleFighterInput(bool isActive);
     public static event ToggleFighterInput OnToggleFighterInput;
@@ -42,6 +44,13 @@ public class GameManager : MonoBehaviour
         Fighter.OnPlayerTurnSet += PlayerConfirmTurnEnd;
         Fighter.OnPlayerKO += PlayerGotKO;
         TurnSystem.OnBattleResultsCalculated += GetBattleResults;
+    }
+
+    public void TriggerGameEnd()
+    {
+        OnToggleFighterInput?.Invoke(false);
+        _EndGameCreditsLoader.EndGame();
+        
     }
 
     private void GetBattleResults(List<ActionStructCompact> p1, List<ActionStructCompact> p2)

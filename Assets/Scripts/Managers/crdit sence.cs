@@ -22,5 +22,9 @@ public class EndGameCreditsLoader : MonoBehaviour
         SceneManager.LoadScene(creditsSceneName);
     }
 
-    
+    IEnumerator LoadCreditsAfterDelay()
+    {
+        yield return new WaitForSeconds(delayBeforeLoad);
+        LoadCredits();
+    }
 }

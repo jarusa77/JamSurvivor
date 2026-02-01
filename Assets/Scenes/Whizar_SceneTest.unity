@@ -675,11 +675,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAvatarControl
   animator:
-  - {fileID: 439078767}
-  - {fileID: 909919845}
+  - {fileID: 1470645044}
+  - {fileID: 1156639292}
   playerTransform:
-  - {fileID: 439078766}
-  - {fileID: 909919844}
+  - {fileID: 1470645042}
+  - {fileID: 1156639290}
   moveDistance: 1
   moveDuration: 0.4
   debugOn: 0
@@ -704,34 +704,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &439078766 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 7579628202667906981, guid: 2c876c08370157b468b34711b046e5fb, type: 3}
-  m_PrefabInstance: {fileID: 5847561037135269339}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 466045746}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.RenderPipelines.Universal.Runtime::UnityEngine.Rendering.Universal.UniversalAdditionalLightData
-  m_UsePipelineSettings: 1
-  m_AdditionalLightsShadowResolutionTier: 2
-  m_CustomShadowLayers: 0
-  m_LightCookieSize: {x: 1, y: 1}
-  m_LightCookieOffset: {x: 0, y: 0}
-  m_SoftShadowQuality: 0
-  m_RenderingLayersMask:
-    serializedVersion: 0
-    m_Bits: 1
-  m_ShadowRenderingLayersMask:
-    serializedVersion: 0
-    m_Bits: 1
-  m_Version: 4
-  m_LightLayerMask: 1
-  m_ShadowLayerMask: 1
-  m_RenderingLayers: 1
-  m_ShadowRenderingLayers: 1
 --- !u!1 &557900184
 GameObject:
   m_ObjectHideFlags: 0
@@ -1773,6 +1745,16 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1030480942}
   m_CullTransparentMesh: 1
+--- !u!4 &1156639290 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3323746332924687002, guid: 2c876c08370157b468b34711b046e5fb, type: 3}
+  m_PrefabInstance: {fileID: 5847561037135269339}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &1156639292 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 8701092445368510688, guid: 2c876c08370157b468b34711b046e5fb, type: 3}
+  m_PrefabInstance: {fileID: 5847561037135269339}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1158720142
 GameObject:
   m_ObjectHideFlags: 0
@@ -2697,6 +2679,16 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1427822773}
   m_CullTransparentMesh: 1
+--- !u!4 &1470645042 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7579628202667906981, guid: 2c876c08370157b468b34711b046e5fb, type: 3}
+  m_PrefabInstance: {fileID: 5847561037135269339}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &1470645044 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 4598196546489568735, guid: 2c876c08370157b468b34711b046e5fb, type: 3}
+  m_PrefabInstance: {fileID: 5847561037135269339}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1502277651
 GameObject:
   m_ObjectHideFlags: 0
@@ -3820,6 +3812,7 @@ GameObject:
   - component: {fileID: 2023527512}
   - component: {fileID: 2023527515}
   - component: {fileID: 2023527516}
+  - component: {fileID: 2023527517}
   m_Layer: 0
   m_Name: MANAGERS + GAME SETTERS
   m_TagString: Untagged
@@ -3873,6 +3866,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb9a0ac106a1e0248a6b0853cb9db03a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
+  _EndGameCreditsLoader: {fileID: 0}
   RoundText: {fileID: 137607174}
 --- !u!4 &2023527514
 Transform:
@@ -3915,6 +3909,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Timer
   roundTime: 1000
+--- !u!114 &2023527517
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2023527511}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86791643e3b2a78449b807d25598fac9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EndGameCreditsLoader
+  creditsSceneName: credit scene
+  delayBeforeLoad: 3
 --- !u!1 &2056508998
 GameObject:
   m_ObjectHideFlags: 0
@@ -4113,6 +4121,4 @@ SceneRoots:
   - {fileID: 1396984973}
   - {fileID: 752197518}
   - {fileID: 5847561037135269339}
-  - {fileID: 753321336}
   - {fileID: 398742580}
-  - {fileID: 1618866143}
