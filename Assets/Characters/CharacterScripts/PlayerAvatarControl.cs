@@ -83,8 +83,12 @@ public class PlayerAvatarControl : MonoBehaviour
         animationQueue.Clear();
         QueueEngage();
 
+        Debug.Log("P1 count" + p1.Count);
+        Debug.Log("P2 count" + p2.Count);
+
         for (int i = 0; i < p1.Count; i++)
         {
+            
             switch (p1[i].actionType)
             {
                 case ActionType.Punch:
