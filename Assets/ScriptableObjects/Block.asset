@@ -29,4 +29,7 @@ MonoBehaviour:
       _SelfDelayFrames: 1
       _TargetDelayFrames: 0
   _FlavorText: 
-  _TypeSprite: {fileID: 0}
+  _TypeSprite: {fileID: 21300000, guid: d997b1f251c563947b4964138d8e711f, type: 3}
+  _MovementResult:
+    _BlocksToMove: 0
+    _MoveType: 0

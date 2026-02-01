@@ -42,6 +42,16 @@ public class Fighter : MonoBehaviour
     public delegate void PlayerKO();
     public static event PlayerKO OnPlayerKO;
 
+    internal int GetHP()
+    {
+        return CurrentHP;
+    }
+
+    internal int GetID()
+    {
+        return ID;
+    }
+
     private void Awake()
     {
         option1 = inputActions.FindAction("Option1");
@@ -177,7 +187,7 @@ public class Fighter : MonoBehaviour
 
     public void ProcessBattleOutcome(ActionData pOutcome)
     {
-        Debug.Log("Player: "+ID+" will take "+pOutcome.Damage+" damage");
+        //Debug.Log("Player: "+ID+" will take "+pOutcome.Damage+" damage");
         CurrentHP -= pOutcome.Damage;
         CheckForDeath();
     }
