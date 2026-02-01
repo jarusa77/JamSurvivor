@@ -12,11 +12,11 @@ public class Fighter : MonoBehaviour
     [SerializeField] List<PlayerCardInHand> Hand;
     public int MaxHP = 100;
     private int CurrentHP;
-    [SerializeField] private static int PlayerMaxCards = 5;
-    public static int MaxMana = 3;
+    [SerializeField] private  int PlayerMaxCards = 5;
+    [SerializeField] private int MaxMana = 3;
     public int CurrentMana;
 
-    internal List<FighterActions> QueuedCards;
+    public List<FighterActions> QueuedCards;
 
     public InputActionAsset inputActions;
     
@@ -29,6 +29,7 @@ public class Fighter : MonoBehaviour
 
     [SerializeField] HandUI HandContainerUI;
     [SerializeField] private BattleCardUI BattleContainerUI;
+    [SerializeField] private FighterUI _FighterUI;
     
     
 
@@ -62,18 +63,29 @@ public class Fighter : MonoBehaviour
         turnEnd = inputActions.FindAction("TurnEnd");
         Hand = new List<PlayerCardInHand>();
         QueuedCards = new List<FighterActions>();
-        
-        
+
+        Timer.OnTimerEnd += AutoSetQueue;
+        GameManager.OnToggleFighterInput += ToggleFighterInput;
     }
 
-    private void OnEnable()
+    void ToggleFighterInput(bool isActive)
     {
-        inputActions.FindActionMap("MoveSelect").Enable();
+        if(isActive)
+            inputActions.FindActionMap("MoveSelect").Enable();
+        else
+        {
+            inputActions.FindActionMap("MoveSelect").Disable();
+        }
     }
 
-    private void OnDisable()
+    private void OnDestroy()
     {
-        inputActions.FindActionMap("MoveSelect").Disable();
+        Timer.OnTimerEnd -= AutoSetQueue;
+    }
+
+    private void AutoSetQueue()
+    {
+        EndTurn();
     }
 
     internal void DiscardHand()
@@ -129,6 +141,7 @@ public class Fighter : MonoBehaviour
 
         CurrentState = PlayerState.Idle;
         CurrentMana = MaxMana;
+        _FighterUI.UpdateStamina(CurrentMana);
         QueuedCards.Clear();
         
         HandContainerUI.PopulateHandUI(Hand);
@@ -136,6 +149,8 @@ public class Fighter : MonoBehaviour
 
     private void SelectCardForQueue(int index)
     {
+        if(index >= Hand.Count)
+            return;
         if(!Hand[index]._isSelected)
         {
             if (Hand[index]._card._ManaCost > CurrentMana)
@@ -149,6 +164,7 @@ public class Fighter : MonoBehaviour
                 Hand[index]._isSelected = true;
                 CurrentMana -= Hand[index]._card._ManaCost;
                 QueuedCards.Add(Hand[index]._card);
+                _FighterUI.UpdateStamina(CurrentMana);
                //AddCardToQueue(Hand[index]);
             }
         }
@@ -190,7 +206,9 @@ public class Fighter : MonoBehaviour
     {
         //Debug.Log("Player: "+ID+" will take "+pOutcome.Damage+" damage");
         CurrentHP -= pOutcome.Damage;
+        _FighterUI.updateHealth(CurrentHP);
         CheckForDeath();
+        
     }
 
     private void CheckForDeath()

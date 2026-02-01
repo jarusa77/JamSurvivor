@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 
 internal enum Game_State
@@ -18,7 +19,13 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance;
     internal Game_State GameState = Game_State.Loading;
 
+    public delegate void ToggleFighterInput(bool isActive);
+    public static event ToggleFighterInput OnToggleFighterInput;
+
     private List<Fighter> _fighters;
+
+    private int RoundCount = 1;
+    [SerializeField] private TextMeshProUGUI RoundText;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Awake()
@@ -30,7 +37,6 @@ public class GameManager : MonoBehaviour
         }
 
         Instance = this;
-        DontDestroyOnLoad(this.gameObject);
         _fighters = new List<Fighter>();
         GameState = Game_State.Loading;
         Fighter.OnPlayerTurnSet += PlayerConfirmTurnEnd;
@@ -62,6 +68,7 @@ public class GameManager : MonoBehaviour
         if (_fighters.Any(x => x.CurrentState != PlayerState.TurnEnd))
             return;
         GameState = Game_State.TurnExecute;
+        OnToggleFighterInput?.Invoke(false);
         SendDataToTurnExecuteSystem();
     }
 
@@ -87,6 +94,10 @@ public class GameManager : MonoBehaviour
             fighter.DiscardHand();
         }
         SetPlayersHand();
+        OnToggleFighterInput?.Invoke(true);
+        RoundCount++;
+        RoundText.text = RoundCount.ToString();
+        Timer.Instance.FightBegin();
     }
 
     public void AddFighter(Fighter fighter)
@@ -94,8 +105,10 @@ public class GameManager : MonoBehaviour
         _fighters.Add(fighter);
         if (_fighters.Count >= 2)
         {
+            //GAME READY TO START
             GameState = Game_State.PlayerTurn;
             SetPlayersHand();
+            IntroAnimationPlay();
         }
     }
 
@@ -105,5 +118,15 @@ public class GameManager : MonoBehaviour
         {
             fighter.DrawForTurn();
         }
+        //Probably not needed right now
+        //OnToggleFighterInput?.Invoke(false);
+        
+    }
+
+    private void IntroAnimationPlay()
+    {
+        //TODO: if playing some intro animation, let it ride until it's done, then start the timer and enable the player inputs
+        Timer.Instance.FightBegin();
+        OnToggleFighterInput?.Invoke(true);
     }
 }
