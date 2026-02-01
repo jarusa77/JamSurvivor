@@ -549,8 +549,49 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 50fb61c0228328f4fa23bb20639ad5d3, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1031846602}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 50fb61c0228328f4fa23bb20639ad5d3, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1031846601}
   m_SourcePrefab: {fileID: 100100000, guid: 50fb61c0228328f4fa23bb20639ad5d3, type: 3}
+--- !u!1 &1031846600 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 50fb61c0228328f4fa23bb20639ad5d3, type: 3}
+  m_PrefabInstance: {fileID: 1031846599}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1031846601
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1031846600}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bf0bcc96b5eac74b98b2a484f4ac8f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameEventTrigger
+  audioPlayer: {fileID: 0}
+--- !u!114 &1031846602
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1031846600}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94a67b0ee7abea0499f6e0f02d0f31f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AudioEventPlayer
+  audioEvents:
+  - eventName: 
+    clip: {fileID: 8300000, guid: f4f859a60e1e7384aacc440e888b7ee2, type: 3}
+    volume: 0
+    loop: 1
 --- !u!1 &1095243187
 GameObject:
   m_ObjectHideFlags: 0
