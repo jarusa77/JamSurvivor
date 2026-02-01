@@ -104,6 +104,10 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: 896af8c3b2aeb09478aa9c21888a8f04, type: 2}
+    - target: {fileID: 5866666021909216657, guid: 5c2146550016d6547a4581dd9954836b, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7603829122922027472, guid: 5c2146550016d6547a4581dd9954836b, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
@@ -115,27 +119,5 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 5c2146550016d6547a4581dd9954836b, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 8930308495379395160}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5c2146550016d6547a4581dd9954836b, type: 3}
---- !u!1 &3169266819891425665 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 5c2146550016d6547a4581dd9954836b, type: 3}
-  m_PrefabInstance: {fileID: 2826596663211216080}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &8930308495379395160
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3169266819891425665}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 70595da8164825a4a9e3dc428181e30a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerAvatarControl
-  moveDistance: 1
-  moveDuration: 0.4
