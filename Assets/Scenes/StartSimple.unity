@@ -270,7 +270,7 @@ MonoBehaviour:
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 480006220}
+  m_TargetGraphic: {fileID: 0}
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
@@ -425,7 +425,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64ae8f88fd308754c970e6751a1edd2f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  GameScene: Whizar_SceneTest
+  GameScene: Game
 --- !u!4 &646250564
 Transform:
   m_ObjectHideFlags: 0
