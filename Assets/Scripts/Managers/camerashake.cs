@@ -10,7 +10,7 @@ public class CameraShake : MonoBehaviour
 
     private Vector3 originalPosition;
     private Coroutine shakeRoutine;
-
+    public bool debugOn = false;
     void Awake()
     {
         originalPosition = transform.localPosition;
@@ -46,7 +46,8 @@ public class CameraShake : MonoBehaviour
    
         if (Keyboard.current.spaceKey.wasPressedThisFrame)
         {
-            TriggerShake();
+            if (debugOn)
+                TriggerShake();
         }
 
     

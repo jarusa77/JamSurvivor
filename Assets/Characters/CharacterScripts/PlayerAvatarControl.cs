@@ -15,6 +15,8 @@ public class PlayerAvatarControl : MonoBehaviour
 
     private bool isRunningSequence;
 
+    public bool debugOn = false; 
+
     private void OnEnable()
     {
         TurnSystem.OnBattleResultsCalculated += RunSequence;
@@ -27,7 +29,7 @@ public class PlayerAvatarControl : MonoBehaviour
 
     public void test()
     {
-        //if (isMoving) return;
+        if(!debugOn) { return; }
 
         if (Keyboard.current.spaceKey.wasPressedThisFrame)
         {
