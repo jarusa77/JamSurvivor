@@ -930,6 +930,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0d374855fab9ab4a9682b425e74ec62, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HealthBarUI
+  HighHealthColor: {r: 0.08235294, g: 1, b: 0, a: 1}
+  WarningHealthColor: {r: 0.9607843, g: 0.5176471, b: 0.02745098, a: 1}
+  CriticalHealthColor: {r: 1, g: 0.043137256, b: 0, a: 1}
 --- !u!1 &690676823
 GameObject:
   m_ObjectHideFlags: 0
@@ -1670,6 +1673,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0d374855fab9ab4a9682b425e74ec62, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HealthBarUI
+  HighHealthColor: {r: 0.080649495, g: 1, b: 0, a: 1}
+  WarningHealthColor: {r: 0.9622642, g: 0.517027, b: 0.027233727, a: 1}
+  CriticalHealthColor: {r: 1, g: 0.04192658, b: 0, a: 1}
 --- !u!1 &1030480942
 GameObject:
   m_ObjectHideFlags: 0
@@ -3866,7 +3872,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb9a0ac106a1e0248a6b0853cb9db03a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
-  _EndGameCreditsLoader: {fileID: 0}
+  _EndGameCreditsLoader: {fileID: 2023527517}
   RoundText: {fileID: 137607174}
 --- !u!4 &2023527514
 Transform:

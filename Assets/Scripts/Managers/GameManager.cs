@@ -48,19 +48,23 @@ public class GameManager : MonoBehaviour
 
     public void TriggerGameEnd()
     {
+        Timer.Instance.StopTimer();
         OnToggleFighterInput?.Invoke(false);
         _EndGameCreditsLoader.EndGame();
-        
     }
+    
+    
 
     private void GetBattleResults(List<ActionStructCompact> p1, List<ActionStructCompact> p2)
     {
         Debug.Log("Successfull message recieved");
     }
 
-    private void PlayerGotKO()
+    public void PlayerGotKO()
     {
         GameState =  Game_State.KOEvaluation;
+        Timer.Instance.StopTimer();
+        OnToggleFighterInput?.Invoke(false);
     }
 
     private void OnDestroy()
