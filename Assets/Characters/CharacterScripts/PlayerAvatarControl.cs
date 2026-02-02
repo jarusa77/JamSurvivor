@@ -20,8 +20,8 @@ public class PlayerAvatarControl : MonoBehaviour
     public Fighter player1;
     public Fighter player2;
     bool MatchEnd = false;
-
     GameManager GM;
+   
 
     private void OnEnable()
     {
@@ -88,15 +88,22 @@ public class PlayerAvatarControl : MonoBehaviour
                 QueueTrigger("Dying", 0);
                 QueueTrigger("Dying", 1);
                 StartCoroutine(Sequence());
-
+                if(GM  ==  null)
+                    GM=GameManager.Instance;
+                GM.PlayerGotKO();
+                MatchEnd = false;
                 return;
             }
             else if(p1health <=0)
             {
+                
                 QueueTrigger("Dying", 0);
                 QueueTrigger("Victory", 1);
                 StartCoroutine(Sequence());
-
+                if (GM == null)
+                    GM = GameManager.Instance;
+                GM.PlayerGotKO();
+                MatchEnd = false;
                 return;
             }
             else if(p2health <=0)
@@ -104,7 +111,10 @@ public class PlayerAvatarControl : MonoBehaviour
                 QueueTrigger("Victory", 0);
                 QueueTrigger("Dying", 1);
                 StartCoroutine(Sequence());
-                
+                if (GM == null)
+                    GM = GameManager.Instance;
+                GM.PlayerGotKO();
+                MatchEnd = false;
                 return;
             }
 
