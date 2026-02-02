@@ -87,6 +87,8 @@ public class PlayerAvatarControl : MonoBehaviour
                 QueueTrigger("Dying", 0);
                 QueueTrigger("Dying", 1);
                 StartCoroutine(Sequence());
+
+                GameManager.Instance.TriggerGameEnd();
                 return;
             }
             else if(p1health <=0)
@@ -94,6 +96,8 @@ public class PlayerAvatarControl : MonoBehaviour
                 QueueTrigger("Dying", 0);
                 QueueTrigger("Victory", 1);
                 StartCoroutine(Sequence());
+                GameManager.Instance.TriggerGameEnd();
+
                 return;
             }
             else if(p2health <=0)
@@ -101,6 +105,7 @@ public class PlayerAvatarControl : MonoBehaviour
                 QueueTrigger("Victory", 0);
                 QueueTrigger("Dying", 1);
                 StartCoroutine(Sequence());
+                GameManager.Instance.TriggerGameEnd();
                 return;
             }
 
