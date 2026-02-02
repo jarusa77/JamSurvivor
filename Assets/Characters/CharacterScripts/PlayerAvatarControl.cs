@@ -19,13 +19,14 @@ public class PlayerAvatarControl : MonoBehaviour
 
     public Fighter player1;
     public Fighter player2;
+    bool MatchEnd = false;
 
-
-
+    GameManager GM;
 
     private void OnEnable()
     {
         TurnSystem.OnBattleResultsCalculated += RunSequence;
+        GM = GameManager.Instance;
        
     }
 
@@ -88,7 +89,6 @@ public class PlayerAvatarControl : MonoBehaviour
                 QueueTrigger("Dying", 1);
                 StartCoroutine(Sequence());
 
-                GameManager.Instance.TriggerGameEnd();
                 return;
             }
             else if(p1health <=0)
@@ -96,7 +96,6 @@ public class PlayerAvatarControl : MonoBehaviour
                 QueueTrigger("Dying", 0);
                 QueueTrigger("Victory", 1);
                 StartCoroutine(Sequence());
-                GameManager.Instance.TriggerGameEnd();
 
                 return;
             }
@@ -105,7 +104,7 @@ public class PlayerAvatarControl : MonoBehaviour
                 QueueTrigger("Victory", 0);
                 QueueTrigger("Dying", 1);
                 StartCoroutine(Sequence());
-                GameManager.Instance.TriggerGameEnd();
+                
                 return;
             }
 
@@ -114,10 +113,14 @@ public class PlayerAvatarControl : MonoBehaviour
 
         StartCoroutine(EngageBoth());
 
-        //QueueDisengage();
-        //StartCoroutine(Sequence());
-
     }
+
+    IEnumerator EndDelay()
+    {
+        yield return new WaitForSeconds(5f);
+        GM.TriggerGameEnd();
+    }
+
 
     IEnumerator Sequence()
     {
@@ -134,7 +137,11 @@ public class PlayerAvatarControl : MonoBehaviour
 
         animationQueue.Clear();
         isRunningSequence = false;
-        StartCoroutine(DisengageBoth());
+
+        if(MatchEnd)
+            StartCoroutine(EndDelay());
+        else
+            StartCoroutine(DisengageBoth());
     }
 
     void QueueTrigger(string trigger, int playerIndex)
