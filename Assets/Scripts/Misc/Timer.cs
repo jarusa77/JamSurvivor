@@ -78,4 +78,9 @@ public class Timer : MonoBehaviour
     {
         isRunning = true;
     }
+
+    public void StopTimer()
+    {
+        isRunning = false;
+    }
 }
