@@ -91,7 +91,7 @@ public class PlayerAvatarControl : MonoBehaviour
                 if(GM  ==  null)
                     GM=GameManager.Instance;
                 GM.PlayerGotKO();
-                MatchEnd = false;
+                MatchEnd = true;
                 return;
             }
             else if(p1health <=0)
@@ -103,7 +103,7 @@ public class PlayerAvatarControl : MonoBehaviour
                 if (GM == null)
                     GM = GameManager.Instance;
                 GM.PlayerGotKO();
-                MatchEnd = false;
+                MatchEnd = true;
                 return;
             }
             else if(p2health <=0)
@@ -114,7 +114,7 @@ public class PlayerAvatarControl : MonoBehaviour
                 if (GM == null)
                     GM = GameManager.Instance;
                 GM.PlayerGotKO();
-                MatchEnd = false;
+                MatchEnd = true;
                 return;
             }
 
@@ -127,7 +127,7 @@ public class PlayerAvatarControl : MonoBehaviour
 
     IEnumerator EndDelay()
     {
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(2.5f);
         GM.TriggerGameEnd();
     }
 
