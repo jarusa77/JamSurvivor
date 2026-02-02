@@ -15,7 +15,6 @@ public class HealthBarUI : MonoBehaviour
 
     private float highHealthThreshold;
     private float warningHealthThreshold;
-    private float lowHealthThreshold;
     
 
     public void InitailizeValues(int maxHealth, int currentHealth)
@@ -24,8 +23,10 @@ public class HealthBarUI : MonoBehaviour
         CurrentHealth = currentHealth;
         
         highHealthThreshold = maxHealth * 0.67f;
-        warningHealthThreshold = maxHealth * 0.66f;
-        lowHealthThreshold = maxHealth * 0.33f;
+        warningHealthThreshold = maxHealth * 0.33f;
+        
+        Debug.Log(highHealthThreshold);
+        Debug.Log(warningHealthThreshold);
         
         
         
@@ -41,12 +42,12 @@ public class HealthBarUI : MonoBehaviour
     public void SetHealth(float health)
     {
         CurrentHealth = Mathf.Clamp(health, 0, MaxHealth);
-        /*
+        
         if (CurrentHealth >= highHealthThreshold)
         {
             fillImage.color = HighHealthColor;
         }
-        else if (CurrentHealth < 66 && CurrentHealth >= warningHealthThreshold)
+        else if (CurrentHealth < highHealthThreshold && CurrentHealth >= warningHealthThreshold)
         {
             fillImage.color = WarningHealthColor;
         }
@@ -54,7 +55,7 @@ public class HealthBarUI : MonoBehaviour
         {
             fillImage.color = CriticalHealthColor;
         }
-        */
+        
 
         UpdateBar();
     }
