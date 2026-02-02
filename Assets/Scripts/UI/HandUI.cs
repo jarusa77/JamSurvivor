@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class HandUI : MonoBehaviour
 {
-    
+    [SerializeField] private Color CardSelected;
+    [SerializeField] private Color DefaultColor;
     
     [SerializeField] private GameObject CardUIPrefab;
     private List<GameObject> HandCardsUI;
@@ -23,7 +24,6 @@ public class HandUI : MonoBehaviour
             GameObject card = Instantiate(CardUIPrefab, this.transform);
             HandCardsUI.Add(card);
         }
-
     }
 
     public void PopulateHandUI(List<PlayerCardInHand> currentPlayerHand)
@@ -34,6 +34,11 @@ public class HandUI : MonoBehaviour
             obj.GetComponent<CardUI>().InitializeCardUI(currentPlayerHand[index]._card, PlayerID, index);
             index++;
         }
+    }
+
+    public void UpdateCardsInUseForTurn()
+    {
+        
     }
 
 

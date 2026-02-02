@@ -16,6 +16,8 @@ public class Fighter : MonoBehaviour
     [SerializeField] private int MaxMana = 3;
     public int CurrentMana;
 
+    
+
     public List<FighterActions> QueuedCards;
 
     public InputActionAsset inputActions;

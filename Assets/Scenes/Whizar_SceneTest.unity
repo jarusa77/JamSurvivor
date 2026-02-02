@@ -623,7 +623,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &393632379
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2291,6 +2291,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 691a57d4b12b1ae439e9b5e187856c01, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HandUI
+  CardSelected: {r: 0, g: 0, b: 0, a: 0}
+  DefaultColor: {r: 0, g: 0, b: 0, a: 0}
   CardUIPrefab: {fileID: 8605238673479259578, guid: 800170e90e7abce459bfe54fcf6891c3, type: 3}
 --- !u!1 &1388956870
 GameObject:
@@ -3156,6 +3158,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 691a57d4b12b1ae439e9b5e187856c01, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HandUI
+  CardSelected: {r: 0, g: 0, b: 0, a: 0}
+  DefaultColor: {r: 0, g: 0, b: 0, a: 0}
   CardUIPrefab: {fileID: 8605238673479259578, guid: 800170e90e7abce459bfe54fcf6891c3, type: 3}
 --- !u!1 &1635349327
 GameObject:
