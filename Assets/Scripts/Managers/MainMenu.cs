@@ -19,7 +19,8 @@ public class MainMenu : MonoBehaviour
 
     public void LoadMainMenu()
     {
-        SceneManager.LoadScene("MainMenu");
+        Debug.Log("LoanMain");
+        SceneManager.LoadScene("StartSimple");
     }
 
     public void QuitGame()
