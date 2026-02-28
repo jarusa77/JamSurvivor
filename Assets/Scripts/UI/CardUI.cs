@@ -8,8 +8,13 @@ public class CardUI : MonoBehaviour
     public GameObject AttackImageContainer;
     public GameObject StaminaContainer;
 
-    public void InitializeCardUI(FighterActions action)
+    private int CardIndex;
+    private int PlayerID;
+
+    public void InitializeCardUI(FighterActions action, int playerID, int cardIndex)
     {
+        PlayerID = playerID;
+        CardIndex = cardIndex;
         AttackImageContainer = this.transform.GetChild(0).gameObject;
         StaminaContainer = this.transform.GetChild(1).gameObject;
         
@@ -30,5 +35,10 @@ public class CardUI : MonoBehaviour
         UnityEngine.UI.Image actionImage = AttackImageContainer.GetComponent<UnityEngine.UI.Image>();
         actionImage.sprite = spriteImage;
         AttackImageContainer.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = actionType.ToString().ToUpper();
+    }
+
+    public void CardClicked()
+    {
+        GameManager.Instance.AddCardToFighterQueue(PlayerID, CardIndex);
     }
 }

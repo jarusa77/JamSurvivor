@@ -14,12 +14,13 @@ public class BattleCardUI : MonoBehaviour
     }
 
     //For now adding all cards in bulk - adding it once player confirms turn
-    public void AddQueuedCardsToUI(List<FighterActions> pActions)
+    public void AddQueuedCardsToUI(List<FighterActions> pActions, int PlayerID)
     {
+        int Index = 0;
         foreach (FighterActions pAction in pActions)
         {
             var gameobject = Instantiate(CardUIPrefab, this.transform);
-            gameobject.GetComponent<CardUI>().InitializeCardUI(pAction);
+            gameobject.GetComponent<CardUI>().InitializeCardUI(pAction, PlayerID, Index);
         }
     }
 

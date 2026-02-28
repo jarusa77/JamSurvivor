@@ -113,6 +113,11 @@ public class GameManager : MonoBehaviour
         Timer.Instance.FightBegin();
     }
 
+    internal Fighter GetFighterByID(int ID)
+    {
+        return _fighters.FirstOrDefault(x => x.GetID() == ID);
+    }
+
     public void AddFighter(Fighter fighter)
     {
         _fighters.Add(fighter);
@@ -141,5 +146,22 @@ public class GameManager : MonoBehaviour
         //TODO: if playing some intro animation, let it ride until it's done, then start the timer and enable the player inputs
         Timer.Instance.FightBegin();
         OnToggleFighterInput?.Invoke(true);
+    }
+
+    public void AddCardToFighterQueue(int playerID, int index)
+    {
+        _fighters.Find(x => x.GetID() == playerID).SelectCardForQueue(index);
+    }
+
+    public void P1EndTurn()
+    {
+        int playerID = 1;
+        _fighters.Find(x => x.GetID() == playerID).EndTurn();
+    }
+
+    public void P2EndTurn()
+    {
+        int playerID = 2;
+        _fighters.Find(x => x.GetID() == playerID).EndTurn();
     }
 }

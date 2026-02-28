@@ -147,10 +147,10 @@ public class Fighter : MonoBehaviour
         _FighterUI.UpdateStamina(CurrentMana);
         QueuedCards.Clear();
         
-        HandContainerUI.PopulateHandUI(Hand);
+        HandContainerUI.PopulateHandUI(Hand, ID);
     }
 
-    private void SelectCardForQueue(int index)
+    internal void SelectCardForQueue(int index)
     {
         if(index >= Hand.Count)
             return;
@@ -201,7 +201,7 @@ public class Fighter : MonoBehaviour
     {
         CurrentState = PlayerState.TurnEnd;
         BattleContainerUI.ClearQueue();
-        BattleContainerUI.AddQueuedCardsToUI(QueuedCards);
+        BattleContainerUI.AddQueuedCardsToUI(QueuedCards, ID);
         OnPlayerTurnSet?.Invoke();
     }
 

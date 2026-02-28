@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections;
@@ -21,13 +22,31 @@ public class PlayerAvatarControl : MonoBehaviour
     public Fighter player2;
     bool MatchEnd = false;
     GameManager GM;
-   
+
+    private void Awake()
+    {
+        InitResources();
+        GM = GameManager.Instance;
+    }
+
+    private void InitResources()
+    {
+        if (player1 == null)
+        {
+            player1 = GameManager.Instance.GetFighterByID(2);
+            player2 = GameManager.Instance.GetFighterByID(1);
+        }
+    }
 
     private void OnEnable()
     {
         TurnSystem.OnBattleResultsCalculated += RunSequence;
-        GM = GameManager.Instance;
        
+    }
+
+    void OnDisable()
+    {
+        TurnSystem.OnBattleResultsCalculated -= RunSequence;
     }
 
 

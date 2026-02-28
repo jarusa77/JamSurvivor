@@ -25,11 +25,6 @@ public class HealthBarUI : MonoBehaviour
         highHealthThreshold = maxHealth * 0.67f;
         warningHealthThreshold = maxHealth * 0.33f;
         
-        Debug.Log(highHealthThreshold);
-        Debug.Log(warningHealthThreshold);
-        
-        
-        
         UpdateBar();
     }
 

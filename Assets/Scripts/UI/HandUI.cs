@@ -24,13 +24,13 @@ public class HandUI : MonoBehaviour
         }
     }
 
-    public void PopulateHandUI(List<PlayerCardInHand> currentPlayerHand)
+    public void PopulateHandUI(List<PlayerCardInHand> currentPlayerHand, int playerID)
     {
-        int index = 0;
+        int Index = 0;
         foreach (GameObject obj in HandCardsUI)
         {
-            obj.GetComponent<CardUI>().InitializeCardUI(currentPlayerHand[index]._card);
-            index++;
+            obj.GetComponent<CardUI>().InitializeCardUI(currentPlayerHand[Index]._card, playerID, Index);
+            Index++;
         }
     }
 
