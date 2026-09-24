@@ -52,4 +52,14 @@ public class HandUI : MonoBehaviour
     {
         
     }
+    public void ClearDisplayedCards()
+    {
+        foreach (GameObject cardUIObject in HandCardsUI)
+        {
+            if (cardUIObject != null)
+            {
+                cardUIObject.SetActive(false);
+            }
+        }
+    }
 }

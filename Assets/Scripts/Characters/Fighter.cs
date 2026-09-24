@@ -1,27 +1,49 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+internal enum PlayerState
+{
+    Idle,
+    TurnEnd,
+    KO
+}
 
-internal enum PlayerState{ Idle, TurnEnd, KO }
 public class Fighter : MonoBehaviour
 {
-    //likely to have a player ID to know which card selection corresponds to whom(?)
-    [SerializeField] int ID;
-    [SerializeField] List<PlayerCardInHand> Hand;
-    public int MaxHP = 100;
-    private int CurrentHP;
-    [SerializeField] private  int PlayerMaxCards = 5;
-    [SerializeField] private int MaxMana = 3;
-    public int CurrentMana;
+    [Header("Fighter Settings")]
+    [SerializeField] private int id;
+    [SerializeField] private int maxHP = 100;
+    [SerializeField] private int playerMaxCards = 5;
+    [SerializeField] private int maxMana = 3;
 
-    
+    [Header("Control Type")]
+    [SerializeField] private bool isAIControlled = false;
 
-    public List<FighterActions> QueuedCards;
+    [Header("AI Settings")]
+    [SerializeField] private float aiThinkDelay = 0.75f;
+    [SerializeField] private int aiMinimumCardsToPlay = 1;
+    [SerializeField] private int aiMaximumCardsToPlay = 3;
 
-    public InputActionAsset inputActions;
-    
+    [Header("Input - Human Only")]
+    [SerializeField] private InputActionAsset inputActions;
+    [SerializeField] private string inputActionMapName = "MoveSelect";
+
+    [Header("UI")]
+    [SerializeField] private HandUI handContainerUI;
+    [SerializeField] private BattleCardUI battleContainerUI;
+    [SerializeField] private FighterUI fighterUI;
+
+    [SerializeField]
+    private List<PlayerCardInHand> hand =
+        new List<PlayerCardInHand>();
+
+    public List<FighterActions> QueuedCards { get; private set; } =
+        new List<FighterActions>();
+
+    private InputActionMap moveSelectMap;
     private InputAction option1;
     private InputAction option2;
     private InputAction option3;
@@ -29,15 +51,12 @@ public class Fighter : MonoBehaviour
     private InputAction option5;
     private InputAction turnEnd;
 
-    [SerializeField] HandUI HandContainerUI;
-    [SerializeField] private BattleCardUI BattleContainerUI;
-    [SerializeField] private FighterUI _FighterUI;
-    
-    
+    private Coroutine aiTurnRoutine;
 
-    internal List<Card> TurnCardsQueued = new List<Card>();
-    internal PlayerState CurrentState = PlayerState.Idle;
+    private int currentHP;
+    private int currentMana;
 
+    internal PlayerState CurrentState { get; private set; } = PlayerState.Idle;
 
     public delegate void PlayerTurnSet();
     public static event PlayerTurnSet OnPlayerTurnSet;
@@ -47,184 +66,444 @@ public class Fighter : MonoBehaviour
 
     internal int GetHP()
     {
-        return CurrentHP;
+        return currentHP;
     }
 
     internal int GetID()
     {
-        return ID;
+        return id;
     }
 
     private void Awake()
     {
-        option1 = inputActions.FindAction("Option1");
-        option2 = inputActions.FindAction("Option2");
-        option3 = inputActions.FindAction("Option3");
-        option4 = inputActions.FindAction("Option4");
-        option5 = inputActions.FindAction("Option5");
-        turnEnd = inputActions.FindAction("TurnEnd");
-        Hand = new List<PlayerCardInHand>();
-        QueuedCards = new List<FighterActions>();
+        hand ??= new List<PlayerCardInHand>();
+        QueuedCards ??= new List<FighterActions>();
+
+        if (!isAIControlled)
+        {
+            SetupHumanInput();
+        }
 
         Timer.OnTimerEnd += AutoSetQueue;
         GameManager.OnToggleFighterInput += ToggleFighterInput;
     }
 
-    void ToggleFighterInput(bool isActive)
+    private void Start()
     {
-        if(isActive)
-            inputActions.FindActionMap("MoveSelect").Enable();
+        InitializeFighterValues();
+
+        if (handContainerUI != null)
+        {
+            handContainerUI.CreatePlaceholders(playerMaxCards);
+        }
+
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.AddFighter(this);
+        }
         else
         {
-            inputActions.FindActionMap("MoveSelect").Disable();
+            Debug.LogError($"{name}: No GameManager was found in the scene.");
         }
     }
 
     private void OnDestroy()
     {
+        StopAITurn();
+
         Timer.OnTimerEnd -= AutoSetQueue;
+        GameManager.OnToggleFighterInput -= ToggleFighterInput;
     }
+
+    private void SetupHumanInput()
+    {
+        if (inputActions == null)
+        {
+            Debug.LogError($"{name}: Assign an Input Action Asset for the human fighter.");
+            return;
+        }
+
+        moveSelectMap = inputActions.FindActionMap(inputActionMapName);
+
+        if (moveSelectMap == null)
+        {
+            Debug.LogError(
+                $"{name}: Could not find input action map '{inputActionMapName}'.");
+
+            return;
+        }
+
+        option1 = moveSelectMap.FindAction("Option1");
+        option2 = moveSelectMap.FindAction("Option2");
+        option3 = moveSelectMap.FindAction("Option3");
+        option4 = moveSelectMap.FindAction("Option4");
+        option5 = moveSelectMap.FindAction("Option5");
+        turnEnd = moveSelectMap.FindAction("TurnEnd");
+
+        if (option1 == null || option2 == null || option3 == null ||
+            option4 == null || option5 == null || turnEnd == null)
+        {
+            Debug.LogError(
+                $"{name}: One or more actions are missing from '{inputActionMapName}'.");
+        }
+    }
+
+    private void InitializeFighterValues()
+    {
+        currentHP = maxHP;
+        currentMana = maxMana;
+
+        if (fighterUI != null)
+        {
+            fighterUI.InitializeValues(
+                maxHP,
+                currentHP,
+                maxMana,
+                currentMana);
+        }
+    }
+
+    private void Update()
+    {
+        // AI does not respond to human keyboard/controller controls.
+        if (isAIControlled)
+        {
+            return;
+        }
+
+        // Human can only select cards while their turn is active.
+        if (CurrentState != PlayerState.Idle || moveSelectMap == null ||
+            !moveSelectMap.enabled)
+        {
+            return;
+        }
+
+        if (option1 != null && option1.WasPressedThisFrame())
+        {
+            SelectCardForQueue(0);
+        }
+
+        if (option2 != null && option2.WasPressedThisFrame())
+        {
+            SelectCardForQueue(1);
+        }
+
+        if (option3 != null && option3.WasPressedThisFrame())
+        {
+            SelectCardForQueue(2);
+        }
+
+        if (option4 != null && option4.WasPressedThisFrame())
+        {
+            SelectCardForQueue(3);
+        }
+
+        if (option5 != null && option5.WasPressedThisFrame())
+        {
+            SelectCardForQueue(4);
+        }
+
+        if (turnEnd != null && turnEnd.WasPressedThisFrame())
+        {
+            EndTurn();
+        }
+    }
+
+    private void ToggleFighterInput(bool isActive)
+    {
+        if (CurrentState == PlayerState.KO)
+        {
+            return;
+        }
+
+        if (isAIControlled)
+        {
+            if (isActive && CurrentState == PlayerState.Idle)
+            {
+                StartAITurn();
+            }
+            else
+            {
+                StopAITurn();
+            }
+
+            return;
+        }
+
+        if (moveSelectMap == null)
+        {
+            return;
+        }
+
+        if (isActive)
+        {
+            moveSelectMap.Enable();
+        }
+        else
+        {
+            moveSelectMap.Disable();
+        }
+    }
+
+    #region AI
+
+    private void StartAITurn()
+    {
+        if (!isAIControlled || CurrentState != PlayerState.Idle)
+        {
+            return;
+        }
+
+        StopAITurn();
+        aiTurnRoutine = StartCoroutine(PerformAITurn());
+    }
+
+    private void StopAITurn()
+    {
+        if (aiTurnRoutine == null)
+        {
+            return;
+        }
+
+        StopCoroutine(aiTurnRoutine);
+        aiTurnRoutine = null;
+    }
+
+    private IEnumerator PerformAITurn()
+    {
+        yield return new WaitForSeconds(aiThinkDelay);
+
+        if (CurrentState != PlayerState.Idle)
+        {
+            aiTurnRoutine = null;
+            yield break;
+        }
+
+        ChooseAICards();
+
+        if (CurrentState == PlayerState.Idle)
+        {
+            EndTurn();
+        }
+
+        aiTurnRoutine = null;
+    }
+
+    private void ChooseAICards()
+    {
+        if (hand == null || hand.Count == 0)
+        {
+            return;
+        }
+
+        int minimumCards = Mathf.Clamp(
+            aiMinimumCardsToPlay,
+            0,
+            playerMaxCards);
+
+        int maximumCards = Mathf.Clamp(
+            aiMaximumCardsToPlay,
+            minimumCards,
+            playerMaxCards);
+
+        int cardsToPlay = UnityEngine.Random.Range(
+            minimumCards,
+            maximumCards + 1);
+
+        List<int> availableIndices = new List<int>();
+
+        for (int i = 0; i < hand.Count; i++)
+        {
+            if (hand[i] != null &&
+                hand[i]._card != null &&
+                !hand[i]._isSelected)
+            {
+                availableIndices.Add(i);
+            }
+        }
+
+        int cardsPlayed = 0;
+
+        while (availableIndices.Count > 0 && cardsPlayed < cardsToPlay)
+        {
+            int availableListIndex = UnityEngine.Random.Range(
+                0,
+                availableIndices.Count);
+
+            int handIndex = availableIndices[availableListIndex];
+
+            int cardsBeforeSelection = QueuedCards.Count;
+            SelectCardForQueue(handIndex);
+
+            if (QueuedCards.Count > cardsBeforeSelection)
+            {
+                cardsPlayed++;
+            }
+
+            // Remove it whether it was affordable or not,
+            // so the AI cannot get stuck trying the same card.
+            availableIndices.RemoveAt(availableListIndex);
+        }
+
+        Debug.Log(
+            $"{name} AI queued {QueuedCards.Count} card(s). " +
+            $"Mana remaining: {currentMana}.");
+    }
+
+    #endregion
 
     private void AutoSetQueue()
     {
-        EndTurn();
-    }
-
-    internal void DiscardHand()
-    {
-        foreach (PlayerCardInHand card in Hand)
+        if (CurrentState == PlayerState.Idle)
         {
-            DeckSystem.Instance.DiscardCard(card._card);
-        }
-        Hand.Clear();
-    }
-
-    void Start()
-    {
-        VariableInitialize();
-        HandContainerUI.CreatePlaceholders(PlayerMaxCards);
-        GameManager.Instance.AddFighter(this);
-    }
-
-    void VariableInitialize()
-    {
-        CurrentHP = MaxHP;
-        CurrentMana = MaxMana;
-        _FighterUI.InitializeValues(MaxHP, CurrentHP, MaxMana, CurrentMana);
-    }
-
-    void Update()
-    {
-        if(option1.WasPressedThisFrame())
-            SelectCardForQueue(0);
-        if(option2.WasPressedThisFrame())
-            SelectCardForQueue(1);
-        if(option3.WasPressedThisFrame())
-            SelectCardForQueue(2);
-        if(option4.WasPressedThisFrame())
-            SelectCardForQueue(3);
-        if (option5.WasPressedThisFrame())
-            SelectCardForQueue(4);
-        
-        if(turnEnd.WasPressedThisFrame())
             EndTurn();
+        }
     }
 
     internal void DrawForTurn()
     {
-        while (Hand.Count < PlayerMaxCards)
+        if (DeckSystem.Instance == null)
         {
-            /*
-            Card deepCopy = Instantiate((DeckSystem.Instance.Draw()));
-            if(deepCopy != null)
-                Hand.Add(deepCopy);
-            */
-            Hand.Add(new PlayerCardInHand(DeckSystem.Instance.Draw(), false));
+            Debug.LogError($"{name}: DeckSystem.Instance is missing.");
+            return;
+        }
+
+        while (hand.Count < playerMaxCards)
+        {
+            FighterActions drawnCard = DeckSystem.Instance.Draw();
+
+            if (drawnCard == null)
+            {
+                Debug.LogWarning(
+                    $"{name}: The deck is empty, so this fighter cannot draw more cards.");
+
+                break;
+            }
+
+            hand.Add(new PlayerCardInHand(drawnCard, false));
         }
 
         CurrentState = PlayerState.Idle;
-        CurrentMana = MaxMana;
-        _FighterUI.UpdateStamina(CurrentMana);
+        currentMana = maxMana;
         QueuedCards.Clear();
-        
-        HandContainerUI.PopulateHandUI(Hand);
+
+        fighterUI?.UpdateStamina(currentMana);
+
+        if (handContainerUI != null)
+        {
+            handContainerUI.PopulateHandUI(hand);
+            handContainerUI.UpdateCardsInUseForTurn();
+        }
     }
 
     private void SelectCardForQueue(int index)
     {
-        if(index >= Hand.Count)
+        if (CurrentState != PlayerState.Idle)
+        {
             return;
-        if(!Hand[index]._isSelected)
-        {
-            if (Hand[index]._card._ManaCost > CurrentMana)
-            {
-                Debug.Log("Not enough Mana!");
-                return;
-            }
-            else
-            {
-                //TODO: Might not need to save actions to a different queue, but can instead loop through the hand and pick the selected.
-                Hand[index]._isSelected = true;
-                CurrentMana -= Hand[index]._card._ManaCost;
-                QueuedCards.Add(Hand[index]._card);
-                _FighterUI.UpdateStamina(CurrentMana);
-               //AddCardToQueue(Hand[index]);
-            }
         }
-        else
-        {
-            Debug.Log("Player attempted to de-select a card, currently not allowed");
-            /*
-            //player "de-selected" the card from the queue - hence returning the mana cost.
-            Hand[index]._isSelected = false;
-            CurrentMana += Hand[index]._card._ManaCost;
-            //TODO : will need to validate deep copy and ID comparison so that if a player selects multiple of the same card, it will only remove that from the queue
-            QueuedCards.Remove(Hand[index]._card);
-            */
-        }
-    }
 
-    public void AddCardToQueue(Card pCard)
-    {
-        if(CurrentMana >= pCard._ManaCost)
+        if (index < 0 || index >= hand.Count)
         {
-            TurnCardsQueued.Add(pCard);
+            return;
         }
-        else
+
+        PlayerCardInHand handCard = hand[index];
+
+        if (handCard == null || handCard._card == null)
         {
-            Debug.Log("Not enough Mana to play card!");
-            //Play sfx or something
+            return;
         }
+
+        if (handCard._isSelected)
+        {
+            return;
+        }
+
+        FighterActions selectedCard = handCard._card;
+
+        if (selectedCard._ManaCost > currentMana)
+        {
+            return;
+        }
+
+        handCard._isSelected = true;
+        currentMana -= selectedCard._ManaCost;
+        QueuedCards.Add(selectedCard);
+
+        fighterUI?.UpdateStamina(currentMana);
+        handContainerUI?.UpdateCardsInUseForTurn();
     }
 
     public void EndTurn()
     {
+        if (CurrentState != PlayerState.Idle)
+        {
+            return;
+        }
+
         CurrentState = PlayerState.TurnEnd;
-        BattleContainerUI.ClearQueue();
-        BattleContainerUI.AddQueuedCardsToUI(QueuedCards);
+
+        if (battleContainerUI != null)
+        {
+            battleContainerUI.AddQueuedCardsToUI(QueuedCards);
+        }
+
         OnPlayerTurnSet?.Invoke();
     }
 
-    public void ProcessBattleOutcome(ActionData pOutcome)
+    internal void DiscardHand()
     {
-        //Debug.Log("Player: "+ID+" will take "+pOutcome.Damage+" damage");
-        CurrentHP -= pOutcome.Damage;
-        _FighterUI.UpdateHealth(CurrentHP);
+        if (DeckSystem.Instance == null)
+        {
+            Debug.LogError($"{name}: DeckSystem.Instance is missing.");
+            return;
+        }
+
+        foreach (PlayerCardInHand card in hand)
+        {
+            if (card != null && card._card != null)
+            {
+                DeckSystem.Instance.DiscardCard(card._card);
+            }
+        }
+
+        hand.Clear();
+        QueuedCards.Clear();
+
+        handContainerUI?.ClearDisplayedCards();
+        battleContainerUI?.ClearQueue();
+    }
+
+    public void ProcessBattleOutcome(ActionData outcome)
+    {
+        if (CurrentState == PlayerState.KO)
+        {
+            return;
+        }
+
+        currentHP -= outcome.Damage;
+        currentHP = Mathf.Clamp(currentHP, 0, maxHP);
+
+        fighterUI?.UpdateHealth(currentHP);
+
         CheckForDeath();
-        
     }
 
     private void CheckForDeath()
     {
-        if (CurrentHP <= 0)
+        if (currentHP > 0 || CurrentState == PlayerState.KO)
         {
-            CurrentState = PlayerState.KO;
-            OnPlayerKO?.Invoke();
+            return;
         }
+
+        CurrentState = PlayerState.KO;
+        OnPlayerKO?.Invoke();
     }
 }
 
-[Serializable] public class PlayerCardInHand
+[Serializable]
+public class PlayerCardInHand
 {
     [SerializeField] internal FighterActions _card;
     [SerializeField] internal bool _isSelected;

@@ -21,6 +21,7 @@ public class DeckSystem : MonoBehaviour
 
         Instance = this;
         Discard = new List<FighterActions>();
+
     }
 
     public static void Shuffle<T>(List<T> list)
