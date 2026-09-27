@@ -52,12 +52,22 @@ public class GameManager : MonoBehaviour
         OnToggleFighterInput?.Invoke(false);
         _EndGameCreditsLoader.EndGame();
     }
-    
-    
 
-    private void GetBattleResults(List<ActionStructCompact> p1, List<ActionStructCompact> p2)
+
+
+    private void GetBattleResults(
+      List<ActionStructCompact> player1Results,
+      List<ActionStructCompact> player2Results)
     {
-        Debug.Log("Successfull message recieved");
+        Debug.Log("Battle results received by GameManager.");
+
+        if (_fighters.Any(fighter => fighter.GetHP() <= 0))
+        {
+            PlayerGotKO();
+            return;
+        }
+
+        BattleEnded();
     }
 
     public void PlayerGotKO()
@@ -88,7 +98,7 @@ public class GameManager : MonoBehaviour
     private void SendDataToTurnExecuteSystem()
     {
         TurnSystem.Instance.ExecuteBattle(_fighters[0], _fighters[1]);
-        BattleEnded();
+        
     }
 
     public void BattleEnded()
@@ -99,19 +109,24 @@ public class GameManager : MonoBehaviour
                   "Fighter HP: "+_fighters[1].GetHP());
         SetupNextPlayerTurn();
     }
-
     public void SetupNextPlayerTurn()
     {
+        GameState = Game_State.PlayerTurn;
+
         foreach (Fighter fighter in _fighters)
         {
             fighter.DiscardHand();
         }
+
         SetPlayersHand();
-        OnToggleFighterInput?.Invoke(true);
+
         RoundCount++;
         RoundText.text = RoundCount.ToString();
+
         Timer.Instance.FightBegin();
+        OnToggleFighterInput?.Invoke(true);
     }
+
 
     public void AddFighter(Fighter fighter)
     {

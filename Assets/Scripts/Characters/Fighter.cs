@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.XR;
 
 internal enum PlayerState
 {
@@ -35,7 +36,7 @@ public class Fighter : MonoBehaviour
     [SerializeField] private HandUI handContainerUI;
     [SerializeField] private BattleCardUI battleContainerUI;
     [SerializeField] private FighterUI fighterUI;
-
+    [SerializeField] List<PlayerCardInHand> Hand;
     [SerializeField]
     private List<PlayerCardInHand> hand =
         new List<PlayerCardInHand>();
@@ -63,6 +64,7 @@ public class Fighter : MonoBehaviour
 
     public delegate void PlayerKO();
     public static event PlayerKO OnPlayerKO;
+
 
     internal int GetHP()
     {
@@ -362,25 +364,17 @@ public class Fighter : MonoBehaviour
 
     internal void DrawForTurn()
     {
-        if (DeckSystem.Instance == null)
-        {
-            Debug.LogError($"{name}: DeckSystem.Instance is missing.");
-            return;
-        }
-
-        while (hand.Count < playerMaxCards)
+        while (Hand.Count < playerMaxCards)
         {
             FighterActions drawnCard = DeckSystem.Instance.Draw();
 
             if (drawnCard == null)
             {
-                Debug.LogWarning(
-                    $"{name}: The deck is empty, so this fighter cannot draw more cards.");
-
+                Debug.LogWarning($"{name}: Could not draw because deck and discard pile are empty.");
                 break;
             }
 
-            hand.Add(new PlayerCardInHand(drawnCard, false));
+            Hand.Add(new PlayerCardInHand(drawnCard, false));
         }
 
         CurrentState = PlayerState.Idle;
@@ -389,11 +383,8 @@ public class Fighter : MonoBehaviour
 
         fighterUI?.UpdateStamina(currentMana);
 
-        if (handContainerUI != null)
-        {
-            handContainerUI.PopulateHandUI(hand);
-            handContainerUI.UpdateCardsInUseForTurn();
-        }
+        handContainerUI?.PopulateHandUI(Hand);
+        handContainerUI?.UpdateCardsInUseForTurn();
     }
 
     private void SelectCardForQueue(int index)

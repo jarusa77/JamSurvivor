@@ -9,6 +9,7 @@ public class HandUI : MonoBehaviour
     
     [SerializeField] private GameObject CardUIPrefab;
     private List<GameObject> HandCardsUI;
+
     internal List<FighterActions> _FighterActions;
 
     private void Awake()
@@ -26,14 +27,46 @@ public class HandUI : MonoBehaviour
 
     public void PopulateHandUI(List<PlayerCardInHand> currentPlayerHand)
     {
-        int index = 0;
-        foreach (GameObject obj in HandCardsUI)
+        if (currentPlayerHand == null)
         {
-            obj.GetComponent<CardUI>().InitializeCardUI(currentPlayerHand[index]._card);
-            index++;
+            Debug.LogWarning("PopulateHandUI received a null hand.");
+            return;
+        }
+
+        for (int i = 0; i < HandCardsUI.Count; i++)
+        {
+            GameObject cardObject = HandCardsUI[i];
+
+            if (cardObject == null)
+            {
+                continue;
+            }
+
+            bool hasValidCard =
+                i < currentPlayerHand.Count &&
+                currentPlayerHand[i] != null &&
+                currentPlayerHand[i]._card != null;
+
+            cardObject.SetActive(hasValidCard);
+
+            if (!hasValidCard)
+            {
+                continue;
+            }
+
+            CardUI cardUI = cardObject.GetComponent<CardUI>();
+
+            if (cardUI == null)
+            {
+                Debug.LogError(
+                    $"{cardObject.name}: This hand-card prefab is missing its CardUI component.");
+
+                continue;
+            }
+
+            cardUI.InitializeCardUI(currentPlayerHand[i]._card);
         }
     }
-
     public void UpdateCardsInUseForTurn()
     {
         
