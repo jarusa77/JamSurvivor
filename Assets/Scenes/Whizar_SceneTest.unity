@@ -2157,6 +2157,11 @@ MonoBehaviour:
   PlayerMaxCards: 5
   MaxMana: 5
   CurrentMana: 0
+  IsAI: 1
+  AIStartDelay: 0.75
+  AICardSelectionDelay: 0.35
+  AIEndTurnDelay: 0.5
+  AIPlayCardChance: 0.75
   QueuedCards: []
   inputActions: {fileID: -944628639613478452, guid: 17fae74a0f3f99f4ebb9c28245164c14, type: 3}
   HandContainerUI: {fileID: 1296436817}
@@ -4141,6 +4146,11 @@ MonoBehaviour:
   PlayerMaxCards: 5
   MaxMana: 5
   CurrentMana: 0
+  IsAI: 0
+  AIStartDelay: 0.75
+  AICardSelectionDelay: 0.35
+  AIEndTurnDelay: 0.5
+  AIPlayCardChance: 0.75
   QueuedCards: []
   inputActions: {fileID: -944628639613478452, guid: c55e8d485fbabd74484d592a6b029469, type: 3}
   HandContainerUI: {fileID: 1634458063}

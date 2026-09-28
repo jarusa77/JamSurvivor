@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-
+using System.Collections;
 
 internal enum PlayerState{ Idle, TurnEnd, KO }
 public class Fighter : MonoBehaviour
@@ -15,8 +15,17 @@ public class Fighter : MonoBehaviour
     [SerializeField] private  int PlayerMaxCards = 5;
     [SerializeField] private int MaxMana = 3;
     public int CurrentMana;
+    [Header("AI")]
+    [SerializeField] private bool IsAI = false;
 
-    
+    [SerializeField] private float AIStartDelay = 0.75f;
+    [SerializeField] private float AICardSelectionDelay = 0.35f;
+    [SerializeField] private float AIEndTurnDelay = 0.5f;
+
+    [SerializeField, Range(0f, 1f)] private float AIPlayCardChance = 0.75f;
+
+    private Coroutine AIPlayCoroutine;
+
 
     public List<FighterActions> QueuedCards;
 
@@ -72,14 +81,31 @@ public class Fighter : MonoBehaviour
 
     void ToggleFighterInput(bool isActive)
     {
-        if(isActive)
-            inputActions.FindActionMap("MoveSelect").Enable();
-        else
+        if (IsAI)
         {
             inputActions.FindActionMap("MoveSelect").Disable();
-        }
-    }
 
+            if (isActive && CurrentState != PlayerState.KO)
+            {
+                if (AIPlayCoroutine != null)
+                    StopCoroutine(AIPlayCoroutine);
+
+                AIPlayCoroutine = StartCoroutine(AITakeTurn());
+            }
+            else if (!isActive && AIPlayCoroutine != null)
+            {
+                StopCoroutine(AIPlayCoroutine);
+                AIPlayCoroutine = null;
+            }
+
+            return;
+        }
+
+        if (isActive)
+            inputActions.FindActionMap("MoveSelect").Enable();
+        else
+            inputActions.FindActionMap("MoveSelect").Disable();
+    }
     private void OnDestroy()
     {
         Timer.OnTimerEnd -= AutoSetQueue;
@@ -183,7 +209,67 @@ public class Fighter : MonoBehaviour
             */
         }
     }
+    private IEnumerator AITakeTurn()
+    {
+        yield return new WaitForSeconds(AIStartDelay);
 
+        if (CurrentState != PlayerState.Idle)
+            yield break;
+
+        List<int> cardIndexes = new List<int>();
+
+        for (int i = 0; i < Hand.Count; i++)
+        {
+            cardIndexes.Add(i);
+        }
+
+        ShuffleIndexes(cardIndexes);
+
+        foreach (int index in cardIndexes)
+        {
+            if (CurrentState != PlayerState.Idle)
+                yield break;
+
+            if (index >= Hand.Count)
+                continue;
+
+            PlayerCardInHand cardInHand = Hand[index];
+
+            if (cardInHand == null || cardInHand._card == null)
+                continue;
+
+            if (cardInHand._isSelected)
+                continue;
+
+            if (cardInHand._card._ManaCost > CurrentMana)
+                continue;
+
+            if (UnityEngine.Random.value > AIPlayCardChance)
+                continue;
+
+            SelectCardForQueue(index);
+
+            yield return new WaitForSeconds(AICardSelectionDelay);
+        }
+
+        yield return new WaitForSeconds(AIEndTurnDelay);
+
+        if (CurrentState == PlayerState.Idle)
+            EndTurn();
+
+        AIPlayCoroutine = null;
+    }
+    private void ShuffleIndexes(List<int> indexes)
+    {
+        for (int i = indexes.Count - 1; i > 0; i--)
+        {
+            int randomIndex = UnityEngine.Random.Range(0, i + 1);
+
+            int temporaryIndex = indexes[i];
+            indexes[i] = indexes[randomIndex];
+            indexes[randomIndex] = temporaryIndex;
+        }
+    }
     public void AddCardToQueue(Card pCard)
     {
         if(CurrentMana >= pCard._ManaCost)
