@@ -623,5 +623,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b8725930c33fc548b65d5a2c1c51230, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CardUI
-  AttackImageContainer: {fileID: 0}
-  StaminaContainer: {fileID: 0}
+  cardNameText: {fileID: 336949892637337748}
+  cardBackgroundImage: {fileID: 6448835462432668245}

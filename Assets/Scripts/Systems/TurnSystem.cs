@@ -54,6 +54,10 @@ public class TurnSystem : MonoBehaviour
             fighter1.ProcessBattleOutcome(player2Outcome);
             fighter2.ProcessBattleOutcome(player1Outcome);
         }
+        fighter1.QueuedCards.Clear();
+        fighter2.QueuedCards.Clear();
+
+        Debug.Log("TurnSystem finished resolving cards. Sending battle results.");
         OnBattleResultsCalculated?.Invoke(p1, p2);
     }
 }

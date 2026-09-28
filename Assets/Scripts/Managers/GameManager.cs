@@ -97,6 +97,11 @@ public class GameManager : MonoBehaviour
 
     private void SendDataToTurnExecuteSystem()
     {
+        if (_fighters.Count < 2)
+        {
+            Debug.LogError("Cannot execute battle because there are fewer than two fighters.");
+            return;
+        }
         TurnSystem.Instance.ExecuteBattle(_fighters[0], _fighters[1]);
         
     }

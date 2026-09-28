@@ -1,34 +1,42 @@
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CardUI : MonoBehaviour
 {
-
-    public GameObject AttackImageContainer;
-    public GameObject StaminaContainer;
+    [SerializeField] private TextMeshProUGUI cardNameText;
+    [SerializeField] private Image cardBackgroundImage;
 
     public void InitializeCardUI(FighterActions action)
     {
-        AttackImageContainer = this.transform.GetChild(0).gameObject;
-        StaminaContainer = this.transform.GetChild(1).gameObject;
-        
-        if(AttackImageContainer)
-            PopulateAttackContainer(action.TypeSprite, action._ActionType);
-        if(StaminaContainer)
-            PopulateStaminaContainer(action._ManaCost);
-            
+        if (action == null)
+        {
+            Debug.LogWarning($"{name}: Received a null card action.");
+            gameObject.SetActive(false);
+            return;
+        }
+
+        if (cardNameText == null)
+        {
+            Debug.LogError(
+                $"{name}: Card Name Text is not assigned on the CardUI prefab.");
+
+            return;
+        }
+
+        cardNameText.text = action.name;
     }
 
-    private void PopulateStaminaContainer(int staminaCost)
+    public void SetCardColor(Color newColor)
     {
-        StaminaContainer.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = staminaCost.ToString();
-    }
+        if (cardBackgroundImage == null)
+        {
+            Debug.LogWarning(
+                $"{name}: Card Background Image is not assigned in the CardUI prefab.");
 
-    private void PopulateAttackContainer(Sprite spriteImage, ActionType actionType)
-    {
-        UnityEngine.UI.Image actionImage = AttackImageContainer.GetComponent<UnityEngine.UI.Image>();
-        actionImage.sprite = spriteImage;
-        AttackImageContainer.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = actionType.ToString().ToUpper();
+            return;
+        }
+
+        cardBackgroundImage.color = newColor;
     }
 }

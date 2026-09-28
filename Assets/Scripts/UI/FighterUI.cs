@@ -36,7 +36,7 @@ public class FighterUI : MonoBehaviour
     {
         if(!_HealthBarUI)
             SetupContainers();
-        _HealthBarUI.InitailizeValues(maxHealth, currentHealth);
+        _HealthBarUI.InitializeValues(maxHealth, currentHealth);
         //HealthText.text = currentHealth.ToString();
         _StaminaBarUI.InitailizeValues(maxStamina, currentStamina);
         

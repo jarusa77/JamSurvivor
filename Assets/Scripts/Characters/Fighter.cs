@@ -466,14 +466,14 @@ public class Fighter : MonoBehaviour
         battleContainerUI?.ClearQueue();
     }
 
-    public void ProcessBattleOutcome(ActionData outcome)
+    public void ProcessBattleOutcome(ActionData pOutcome)
     {
         if (CurrentState == PlayerState.KO)
         {
             return;
         }
 
-        currentHP -= outcome.Damage;
+        currentHP -= pOutcome.Damage;
         currentHP = Mathf.Clamp(currentHP, 0, maxHP);
 
         fighterUI?.UpdateHealth(currentHP);
@@ -491,6 +491,7 @@ public class Fighter : MonoBehaviour
         CurrentState = PlayerState.KO;
         OnPlayerKO?.Invoke();
     }
+    
 }
 
 [Serializable]
