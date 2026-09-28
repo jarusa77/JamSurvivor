@@ -1028,9 +1028,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0d374855fab9ab4a9682b425e74ec62, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HealthBarUI
-  HighHealthColor: {r: 0.08235294, g: 1, b: 0, a: 1}
-  WarningHealthColor: {r: 0.9607843, g: 0.5176471, b: 0.02745098, a: 1}
-  CriticalHealthColor: {r: 1, g: 0.043137256, b: 0, a: 1}
+  fillImage: {fileID: 0}
+  healthBarSpeed: 2.5
+  highHealthColor: {r: 0, g: 1, b: 0, a: 1}
+  warningHealthColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  criticalHealthColor: {r: 1, g: 0, b: 0, a: 1}
 --- !u!1 &690676823
 GameObject:
   m_ObjectHideFlags: 0
@@ -1771,9 +1773,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0d374855fab9ab4a9682b425e74ec62, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HealthBarUI
-  HighHealthColor: {r: 0.080649495, g: 1, b: 0, a: 1}
-  WarningHealthColor: {r: 0.9622642, g: 0.517027, b: 0.027233727, a: 1}
-  CriticalHealthColor: {r: 1, g: 0.04192658, b: 0, a: 1}
+  fillImage: {fileID: 0}
+  healthBarSpeed: 2.5
+  highHealthColor: {r: 0, g: 1, b: 0, a: 1}
+  warningHealthColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  criticalHealthColor: {r: 1, g: 0, b: 0, a: 1}
 --- !u!1 &1030480942
 GameObject:
   m_ObjectHideFlags: 0
@@ -2151,10 +2155,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0e3525ba930d724b938f03f5836c88b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Fighter
-  id: 0
-  maxHP: 100
+  id: 5
+  maxHP: 5
   playerMaxCards: 5
-  maxMana: 3
+  maxMana: 5
   isAIControlled: 1
   aiThinkDelay: 0.75
   aiMinimumCardsToPlay: 1
@@ -2164,19 +2168,8 @@ MonoBehaviour:
   handContainerUI: {fileID: 1296436817}
   battleContainerUI: {fileID: 344524965}
   fighterUI: {fileID: 1975135861}
-  hand:
-  - _card: {fileID: 11400000, guid: e960c3ab8052eae438a225165c29d958, type: 2}
-    _isSelected: 0
-  - _card: {fileID: 11400000, guid: 68cd5969da37f6b4a9f99e353661b94b, type: 2}
-    _isSelected: 0
-  - _card: {fileID: 11400000, guid: 917ea847ff4c67b4195f4bb0497bc4a0, type: 2}
-    _isSelected: 0
-  - _card: {fileID: 11400000, guid: 917ea847ff4c67b4195f4bb0497bc4a0, type: 2}
-    _isSelected: 0
-  - _card: {fileID: 11400000, guid: 31925a11efe976a489c9e3bc334037fe, type: 2}
-    _isSelected: 0
-  - _card: {fileID: 11400000, guid: 82ac44dfe79486a4bb7b6b9f32475c65, type: 2}
-    _isSelected: 0
+  Hand: []
+  hand: []
 --- !u!4 &1237985678
 Transform:
   m_ObjectHideFlags: 0
@@ -4163,6 +4156,7 @@ MonoBehaviour:
   handContainerUI: {fileID: 1634458063}
   battleContainerUI: {fileID: 291157245}
   fighterUI: {fileID: 349801799}
+  Hand: []
   hand:
   - _card: {fileID: 11400000, guid: e960c3ab8052eae438a225165c29d958, type: 2}
     _isSelected: 0
