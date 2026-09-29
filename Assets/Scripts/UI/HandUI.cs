@@ -26,11 +26,17 @@ public class HandUI : MonoBehaviour
 
     public void PopulateHandUI(List<PlayerCardInHand> currentPlayerHand)
     {
-        int index = 0;
-        foreach (GameObject obj in HandCardsUI)
+        for (int i = 0; i < HandCardsUI.Count; i++)
         {
-            obj.GetComponent<CardUI>().InitializeCardUI(currentPlayerHand[index]._card);
-            index++;
+            if (i >= currentPlayerHand.Count || currentPlayerHand[i]._card == null)
+            {
+                HandCardsUI[i].SetActive(false);
+                continue;
+            }
+
+            HandCardsUI[i].SetActive(true);
+            HandCardsUI[i].GetComponent<CardUI>()
+                .InitializeCardUI(currentPlayerHand[i]._card);
         }
     }
 

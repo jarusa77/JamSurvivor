@@ -32,10 +32,14 @@ public class Fighter : MonoBehaviour
     [SerializeField] HandUI HandContainerUI;
     [SerializeField] private BattleCardUI BattleContainerUI;
     [SerializeField] private FighterUI _FighterUI;
-    
-    
+    [SerializeField] private bool isAIControlled = false;
 
-    internal List<Card> TurnCardsQueued = new List<Card>();
+    public bool IsAIControlled => isAIControlled;
+    public int AvailableMana => CurrentMana;
+    public List<PlayerCardInHand> CurrentHand => Hand;
+
+
+    internal List<FighterActions> TurnCardsQueued = new List<FighterActions>();
     internal PlayerState CurrentState = PlayerState.Idle;
 
 
@@ -72,14 +76,44 @@ public class Fighter : MonoBehaviour
 
     void ToggleFighterInput(bool isActive)
     {
-        if(isActive)
-            inputActions.FindActionMap("MoveSelect").Enable();
-        else
+        if (isAIControlled)
         {
             inputActions.FindActionMap("MoveSelect").Disable();
+            return;
         }
-    }
 
+        if (isActive)
+            inputActions.FindActionMap("MoveSelect").Enable();
+        else
+            inputActions.FindActionMap("MoveSelect").Disable();
+    }
+    public bool TryQueueCard(int index)
+    {
+        if (CurrentState != PlayerState.Idle)
+            return false;
+
+        if (index < 0 || index >= Hand.Count)
+            return false;
+
+        PlayerCardInHand selectedCard = Hand[index];
+
+        if (selectedCard._isSelected)
+            return false;
+
+        if (selectedCard._card == null)
+            return false;
+
+        if (selectedCard._card._ManaCost > CurrentMana)
+            return false;
+
+        selectedCard._isSelected = true;
+        CurrentMana -= selectedCard._card._ManaCost;
+        QueuedCards.Add(selectedCard._card);
+
+        _FighterUI.UpdateStamina(CurrentMana);
+
+        return true;
+    }
     private void OnDestroy()
     {
         Timer.OnTimerEnd -= AutoSetQueue;
@@ -128,6 +162,26 @@ public class Fighter : MonoBehaviour
         
         if(turnEnd.WasPressedThisFrame())
             EndTurn();
+        if (isAIControlled)
+            return;
+
+        if (option1.WasPressedThisFrame())
+            SelectCardForQueue(0);
+
+        if (option2.WasPressedThisFrame())
+            SelectCardForQueue(1);
+
+        if (option3.WasPressedThisFrame())
+            SelectCardForQueue(2);
+
+        if (option4.WasPressedThisFrame())
+            SelectCardForQueue(3);
+
+        if (option5.WasPressedThisFrame())
+            SelectCardForQueue(4);
+
+        if (turnEnd.WasPressedThisFrame())
+            EndTurn();
     }
 
     internal void DrawForTurn()
@@ -150,58 +204,38 @@ public class Fighter : MonoBehaviour
         HandContainerUI.PopulateHandUI(Hand);
     }
 
-    private void SelectCardForQueue(int index)
-    {
-        if(index >= Hand.Count)
-            return;
-        if(!Hand[index]._isSelected)
-        {
-            if (Hand[index]._card._ManaCost > CurrentMana)
-            {
-                Debug.Log("Not enough Mana!");
-                return;
-            }
-            else
-            {
-                //TODO: Might not need to save actions to a different queue, but can instead loop through the hand and pick the selected.
-                Hand[index]._isSelected = true;
-                CurrentMana -= Hand[index]._card._ManaCost;
-                QueuedCards.Add(Hand[index]._card);
-                _FighterUI.UpdateStamina(CurrentMana);
-               //AddCardToQueue(Hand[index]);
-            }
-        }
-        else
-        {
-            Debug.Log("Player attempted to de-select a card, currently not allowed");
-            /*
-            //player "de-selected" the card from the queue - hence returning the mana cost.
-            Hand[index]._isSelected = false;
-            CurrentMana += Hand[index]._card._ManaCost;
-            //TODO : will need to validate deep copy and ID comparison so that if a player selects multiple of the same card, it will only remove that from the queue
-            QueuedCards.Remove(Hand[index]._card);
-            */
-        }
-    }
+   
 
-    public void AddCardToQueue(Card pCard)
+    public void AddCardToQueue(FighterActions pCard)
     {
-        if(CurrentMana >= pCard._ManaCost)
+        if (CurrentMana >= pCard._ManaCost)
         {
-            TurnCardsQueued.Add(pCard);
+            CurrentMana -= pCard._ManaCost;
+            QueuedCards.Add(pCard);
+            _FighterUI.UpdateStamina(CurrentMana);
         }
         else
         {
             Debug.Log("Not enough Mana to play card!");
-            //Play sfx or something
         }
     }
-
+    private void SelectCardForQueue(int index)
+    {
+        if (!TryQueueCard(index))
+        {
+            Debug.Log("Card could not be queued.");
+        }
+    }
     public void EndTurn()
     {
+        if (CurrentState != PlayerState.Idle)
+            return;
+
         CurrentState = PlayerState.TurnEnd;
+
         BattleContainerUI.ClearQueue();
         BattleContainerUI.AddQueuedCardsToUI(QueuedCards);
+
         OnPlayerTurnSet?.Invoke();
     }
 

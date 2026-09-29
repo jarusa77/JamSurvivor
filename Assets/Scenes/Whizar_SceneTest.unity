@@ -2132,6 +2132,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1237985678}
   - component: {fileID: 1237985677}
+  - component: {fileID: 1237985679}
   m_Layer: 0
   m_Name: Player (1)
   m_TagString: Untagged
@@ -2162,6 +2163,7 @@ MonoBehaviour:
   HandContainerUI: {fileID: 1296436817}
   BattleContainerUI: {fileID: 344524965}
   _FighterUI: {fileID: 1975135861}
+  isAIControlled: 1
 --- !u!4 &1237985678
 Transform:
   m_ObjectHideFlags: 0
@@ -2177,6 +2179,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1237985679
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1237985675}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d56c6bf5dfa9b54784fa40488e1fbf6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SimpleFighterAI
+  thinkingTime: 1
+  maxCardsToPlay: 5
 --- !u!1 &1282531893
 GameObject:
   m_ObjectHideFlags: 0
@@ -4146,6 +4162,7 @@ MonoBehaviour:
   HandContainerUI: {fileID: 1634458063}
   BattleContainerUI: {fileID: 291157245}
   _FighterUI: {fileID: 349801799}
+  isAIControlled: 0
 --- !u!4 &2126587732
 Transform:
   m_ObjectHideFlags: 0
