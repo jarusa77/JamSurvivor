@@ -1,31 +1,33 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-
-
 public class MainMenu : MonoBehaviour
 {
+    [Header("Scene Names")]
+    [SerializeField] private string gameModeSelectionScene = "GameModeSelect";
+    [SerializeField] private string mainMenuScene = "StartSimple";
+
     private void Start()
     {
-        if(SoundManager.Instance!=null)
+        if (SoundManager.Instance != null)
+        {
             SoundManager.Instance.StopMusic();
+        }
     }
 
-    public string GameScene = "Game";
     public void LoadGame()
     {
-        SceneManager.LoadScene(GameScene); // replace with your scene name
+        SceneManager.LoadScene(gameModeSelectionScene);
     }
 
     public void LoadMainMenu()
     {
-        Debug.Log("LoanMain");
-        SceneManager.LoadScene("StartSimple");
+        SceneManager.LoadScene(mainMenuScene);
     }
 
     public void QuitGame()
     {
+        Debug.Log("Quit Game");
         Application.Quit();
-        Debug.Log("Quit Game"); // shows in editor
     }
 }
