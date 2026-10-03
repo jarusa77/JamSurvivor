@@ -33,6 +33,7 @@ public class Fighter : MonoBehaviour
     [SerializeField] private BattleCardUI BattleContainerUI;
     [SerializeField] private FighterUI _FighterUI;
     [SerializeField] private bool isAIControlled = false;
+    [SerializeField] private string inputActionMapName = "Player1Select";
 
     public bool IsAIControlled => isAIControlled;
     public int AvailableMana => CurrentMana;
@@ -61,31 +62,58 @@ public class Fighter : MonoBehaviour
 
     private void Awake()
     {
-        option1 = inputActions.FindAction("Option1");
-        option2 = inputActions.FindAction("Option2");
-        option3 = inputActions.FindAction("Option3");
-        option4 = inputActions.FindAction("Option4");
-        option5 = inputActions.FindAction("Option5");
-        turnEnd = inputActions.FindAction("TurnEnd");
+        InputActionMap actionMap = inputActions.FindActionMap(inputActionMapName);
+
+        if (actionMap == null)
+        {
+            Debug.LogError($"Fighter {ID} cannot find input map: {inputActionMapName}");
+            return;
+        }
+
+        option1 = actionMap.FindAction("Option1");
+        option2 = actionMap.FindAction("Option2");
+        option3 = actionMap.FindAction("Option3");
+        option4 = actionMap.FindAction("Option4");
+        option5 = actionMap.FindAction("Option5");
+        turnEnd = actionMap.FindAction("TurnEnd");
+
         Hand = new List<PlayerCardInHand>();
         QueuedCards = new List<FighterActions>();
 
         Timer.OnTimerEnd += AutoSetQueue;
         GameManager.OnToggleFighterInput += ToggleFighterInput;
     }
-
     void ToggleFighterInput(bool isActive)
     {
         if (isAIControlled)
         {
-            inputActions.FindActionMap("MoveSelect").Disable();
+            inputActions.FindActionMap(inputActionMapName)?.Disable();
+            return;
+        }
+
+        InputActionMap actionMap = inputActions.FindActionMap(inputActionMapName);
+
+        if (actionMap == null)
+        {
+            Debug.LogError($"Input map '{inputActionMapName}' was not found for Fighter {ID}.");
             return;
         }
 
         if (isActive)
-            inputActions.FindActionMap("MoveSelect").Enable();
+            actionMap.Enable();
         else
-            inputActions.FindActionMap("MoveSelect").Disable();
+            actionMap.Disable();
+    }
+    public void SetAIControlled(bool value)
+    {
+        isAIControlled = value;
+
+        InputActionMap actionMap = inputActions.FindActionMap(inputActionMapName);
+
+        if (isAIControlled)
+        {
+            actionMap?.Disable();
+        }
     }
     public bool TryQueueCard(int index)
     {
@@ -147,23 +175,16 @@ public class Fighter : MonoBehaviour
         _FighterUI.InitializeValues(MaxHP, CurrentHP, MaxMana, CurrentMana);
     }
 
-    void Update()
+    private void Update()
     {
-        if(option1.WasPressedThisFrame())
-            SelectCardForQueue(0);
-        if(option2.WasPressedThisFrame())
-            SelectCardForQueue(1);
-        if(option3.WasPressedThisFrame())
-            SelectCardForQueue(2);
-        if(option4.WasPressedThisFrame())
-            SelectCardForQueue(3);
-        if (option5.WasPressedThisFrame())
-            SelectCardForQueue(4);
-        
-        if(turnEnd.WasPressedThisFrame())
-            EndTurn();
         if (isAIControlled)
             return;
+
+        if (option1 == null || option2 == null || option3 == null ||
+            option4 == null || option5 == null || turnEnd == null)
+        {
+            return;
+        }
 
         if (option1.WasPressedThisFrame())
             SelectCardForQueue(0);
