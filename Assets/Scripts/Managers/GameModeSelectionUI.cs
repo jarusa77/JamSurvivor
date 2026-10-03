@@ -9,10 +9,9 @@ public class GameModeSelectionUI : MonoBehaviour
     [SerializeField] private string gameSceneName = "Game";
     [SerializeField] private string mainMenuSceneName = "StartSimple";
 
-    [Header("Optional UI")]
-    [SerializeField] private GameObject soloSelectedIndicator;
-    [SerializeField] private GameObject multiplayerSelectedIndicator;
-    [SerializeField] private GameObject confirmPanel;
+    [Header("Selection Display")]
+    [SerializeField] private GameObject soloSelectedText;
+    [SerializeField] private GameObject multiplayerSelectedText;
 
     private GameMode selectedMode = GameMode.Solo;
 
@@ -29,12 +28,16 @@ public class GameModeSelectionUI : MonoBehaviour
     {
         selectedMode = GameMode.Solo;
         UpdateSelectionUI();
+
+        Debug.Log("Solo mode selected.");
     }
 
     public void SelectMultiplayerMode()
     {
         selectedMode = GameMode.LocalMultiplayer;
         UpdateSelectionUI();
+
+        Debug.Log("Local multiplayer selected.");
     }
 
     public void StartGame()
@@ -52,22 +55,18 @@ public class GameModeSelectionUI : MonoBehaviour
 
     private void UpdateSelectionUI()
     {
-        if (soloSelectedIndicator != null)
+        if (soloSelectedText != null)
         {
-            soloSelectedIndicator.SetActive(selectedMode == GameMode.Solo);
+            soloSelectedText.SetActive(selectedMode == GameMode.Solo);
         }
 
-        if (multiplayerSelectedIndicator != null)
+        if (multiplayerSelectedText != null)
         {
-            multiplayerSelectedIndicator.SetActive(
+            multiplayerSelectedText.SetActive(
                 selectedMode == GameMode.LocalMultiplayer);
         }
-
-        if (confirmPanel != null)
-        {
-            confirmPanel.SetActive(true);
-        }
     }
+
     public enum GameMode
     {
         Solo = 0,

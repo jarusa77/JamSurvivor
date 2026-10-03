@@ -175,23 +175,16 @@ public class Fighter : MonoBehaviour
         _FighterUI.InitializeValues(MaxHP, CurrentHP, MaxMana, CurrentMana);
     }
 
-    void Update()
+    private void Update()
     {
-        if(option1.WasPressedThisFrame())
-            SelectCardForQueue(0);
-        if(option2.WasPressedThisFrame())
-            SelectCardForQueue(1);
-        if(option3.WasPressedThisFrame())
-            SelectCardForQueue(2);
-        if(option4.WasPressedThisFrame())
-            SelectCardForQueue(3);
-        if (option5.WasPressedThisFrame())
-            SelectCardForQueue(4);
-        
-        if(turnEnd.WasPressedThisFrame())
-            EndTurn();
         if (isAIControlled)
             return;
+
+        if (option1 == null || option2 == null || option3 == null ||
+            option4 == null || option5 == null || turnEnd == null)
+        {
+            return;
+        }
 
         if (option1.WasPressedThisFrame())
             SelectCardForQueue(0);
