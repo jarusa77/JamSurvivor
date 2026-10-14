@@ -30,7 +30,14 @@ public class PlayerAvatarControl : MonoBehaviour
        
     }
 
+    private void OnDisable()
+    {
+        TurnSystem.OnBattleResultsCalculated -= RunSequence;
 
+        StopAllCoroutines();
+        animationQueue.Clear();
+        isRunningSequence = false;
+    }
     public void RunSequence(List<ActionStructCompact> p1, List<ActionStructCompact> p2)
     {
         animationQueue.Clear();
