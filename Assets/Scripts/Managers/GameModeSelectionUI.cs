@@ -5,6 +5,9 @@ public class GameModeSelectionUI : MonoBehaviour
 {
     private const string GameModeKey = "SelectedGameMode";
 
+    [Header("Character Selection")]
+    [SerializeField] private CharacterSelectionUI characterSelectionUI;
+
     [Header("Scene Names")]
     [SerializeField] private string gameSceneName = "Game";
     [SerializeField] private string mainMenuSceneName = "StartSimple";
@@ -42,12 +45,19 @@ public class GameModeSelectionUI : MonoBehaviour
 
     public void StartGame()
     {
+        if (characterSelectionUI == null)
+        {
+            Debug.LogError(
+                "Assign CharacterSelectionUI in the Inspector.",
+                this);
+            return;
+        }
+
         PlayerPrefs.SetInt(GameModeKey, (int)selectedMode);
         PlayerPrefs.Save();
 
-        SceneManager.LoadScene(gameSceneName);
+        characterSelectionUI.OpenCharacterSelection();
     }
-
     public void BackToMainMenu()
     {
         SceneManager.LoadScene(mainMenuSceneName);
